@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CFA L1 Şubat 2027 · Çalışma Planlayıcı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1622; --panel:#141F2E; --panel2:#1A2738; --line:#26374D; --line2:#33465F;
+  --text:#E6ECF3; --muted:#8797AB; --up:#3DD68C; --down:#F0665C; --amber:#F5B84B;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',Menlo,Consolas,monospace;
+  --r:6px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45}
+body{min-height:100vh;display:flex;flex-direction:column}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07}
+#bg svg{width:100%;height:100%}
+#bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;opacity:.5}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.dim{color:var(--muted)}.up{color:var(--up)}.down{color:var(--down)}.amber{color:var(--amber)}
+h1{font-size:22px;font-weight:600;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-size:14px;font-weight:600;margin:22px 0 8px;color:var(--muted)}
+p.hint{color:var(--muted);font-size:13px;margin:8px 0 14px;max-width:70ch}
+a{color:inherit}
+/* ticker */
+#ticker{position:relative;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);overflow:hidden;height:34px;font-family:var(--mono);font-size:12.5px}
+#ticker .track{display:inline-flex;white-space:nowrap;animation:tick 70s linear infinite;height:34px;align-items:center}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){#ticker .track{animation:none}}
+.tk{display:inline-flex;gap:8px;padding:0 22px;border-right:1px solid var(--line)}
+.tk-k{color:var(--muted)}.tk-v{font-weight:600}
+/* layout */
+#app{position:relative;z-index:1;display:flex;flex:1;min-height:0}
+.nav{width:172px;flex:none;border-right:1px solid var(--line);padding:18px 10px;display:flex;flex-direction:column;gap:2px;background:rgba(14,22,34,.6)}
+.nav .brand{font-family:var(--mono);font-size:12px;color:var(--muted);padding:0 10px 14px;line-height:1.35}
+.nav .brand b{display:block;color:var(--text);font-size:14px}
+.nav button{all:unset;cursor:pointer;padding:9px 12px;border-radius:var(--r);color:var(--muted);font-size:14px}
+.nav button:hover{background:var(--panel2);color:var(--text)}
+.nav button.on{background:var(--panel2);color:var(--text);box-shadow:inset 3px 0 0 var(--amber)}
+.nav button:focus-visible{outline:2px solid var(--amber)}
+#view{flex:1;padding:22px 28px 60px;min-width:0;max-width:1280px}
+.grid2{display:grid;grid-template-columns:1.25fr .9fr;gap:26px}
+.col{min-width:0}
+/* notes, stats */
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);padding:10px 14px;border-radius:var(--r);font-size:14px;margin:0 0 14px}
+.note.quiet{border-left-color:var(--line2);color:var(--muted)}
+.note.amber{border-left-color:var(--amber)}.note.danger{border-left-color:var(--down)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.stat .k{font-size:12px;color:var(--muted)}.stat .v{font-size:21px;font-weight:600;margin-top:2px}
+.stat .v input{font-size:16px}
+/* rows */
+.rows{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.row.done{opacity:.55}
+.rw-main{flex:1;min-width:0}
+.rw-t{font-size:14px}.rw-t b{font-family:var(--mono);font-weight:600;margin-right:6px}
+.rw-s{font-size:12.5px;color:var(--muted);margin-top:2px}.rw-s em{color:var(--amber);font-style:normal}
+.rw-r{font-size:13px;white-space:nowrap}
+.chk{position:relative;width:22px;height:22px;flex:none;cursor:pointer}
+.chk input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.chk span{position:absolute;inset:0;border:1.5px solid var(--line2);border-radius:4px;background:var(--ink)}
+.chk input:checked+span{background:var(--up);border-color:var(--up)}
+.chk input:checked+span::after{content:'';position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid var(--ink);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chk input:focus-visible+span{outline:2px solid var(--amber)}
+.qmark{flex:none;width:36px;height:22px;border-radius:4px;font-family:var(--mono);font-size:11px;display:grid;place-items:center;font-weight:600}
+.qmark.les{background:#2B4C7E;color:#CFE0FF}.qmark.qb{background:#4B3A6B;color:#E1D2FF}
+.qlog{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+input,select{font:inherit;color:var(--text);background:var(--ink);border:1px solid var(--line2);border-radius:4px;padding:5px 8px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+input.mini{width:72px;padding:4px 6px;font-size:13px}
+input.wide{flex:1;min-width:120px}
+input[type=date]{color-scheme:dark}
+.btn{font:inherit;cursor:pointer;background:var(--panel2);color:var(--text);border:1px solid var(--line2);border-radius:4px;padding:6px 12px}
+.btn:hover{border-color:var(--muted)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn.danger{border-color:var(--down);color:var(--down)}
+.ghost{all:unset;cursor:pointer;color:var(--muted);padding:2px 6px;border-radius:4px;font-size:14px}
+.ghost:hover{color:var(--text);background:var(--panel2)}.ghost:disabled{opacity:.3;cursor:default}
+.empty{color:var(--muted);padding:24px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}
+.extra{margin-top:18px;background:var(--panel);border:1px dashed var(--line2);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.qmark.fr{background:#3F4F2A;color:#DDEBB8}.qmark.vid{background:#2E3A4A;color:#C9D6E6}
+.row.next{opacity:.7;border-style:dashed}.row.next:hover{opacity:1}
+.nextbox{margin-top:14px;border:1px dashed var(--line2);border-radius:var(--r);padding:8px 10px}
+.nextbox summary{cursor:pointer;font-size:13.5px;color:var(--text);list-style:none;padding:2px 0}
+.nextbox summary::-webkit-details-marker{display:none}
+.nextbox summary::before{content:'▸ ';color:var(--muted)}.nextbox[open] summary::before{content:'▾ '}
+.nextbox .rows{margin-top:8px}
+.empty.quiet{padding:12px;font-size:13px}
+/* log rows */
+.loglist{display:flex;flex-direction:column;gap:5px}
+.lgr{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 10px;font-size:13px;flex-wrap:wrap}
+.lgr .lgl{flex:1;min-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lgr .lgl b{font-family:var(--mono);font-weight:600;margin-right:4px}
+.lgr .lg-m{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.lgr input.mini{width:64px;padding:3px 6px;font-size:12.5px}
+.lgr input.wide{flex:1;min-width:140px;padding:3px 8px;font-size:13px}
+.lgr input.lg-d{font-size:12px;padding:3px 6px;width:130px}
+.logday{margin-bottom:16px}
+.logday-h{display:flex;align-items:baseline;gap:10px;padding:6px 2px;border-bottom:1px solid var(--line);margin-bottom:6px;font-size:14px}
+.btn.on{border-color:var(--amber);color:var(--amber)}
+.pastebox{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.pastebox textarea{font:12px var(--mono);color:var(--text);background:var(--ink);border:1px solid var(--line2);border-radius:4px;padding:8px;width:100%;resize:vertical}
+/* curve */
+.curve{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px 6px;margin-bottom:14px}
+.curve-h{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
+.leg i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin:0 5px 0 10px}
+.l-plan{background:var(--muted)}.l-act{background:var(--up)}.l-fc{background:var(--amber)}
+.curve svg{width:100%;height:210px;display:block}
+.curve .ax{fill:var(--muted);font-size:10px;font-family:var(--mono)}
+.curve .gl{stroke:var(--line);stroke-width:1}
+.curve .p-plan{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3}
+.curve .p-act{fill:none;stroke:var(--up);stroke-width:2.2}
+.curve .p-fc{fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:2 4}
+.curve .rv{stroke:var(--amber);stroke-width:1;opacity:.7}
+.curve .tl{stroke:var(--text);stroke-width:1;opacity:.5}
+/* week */
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.bar h1{margin:0}.bar .right{margin-left:auto}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.wday{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:8px;min-height:160px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.wday:hover{border-color:var(--line2)}
+.wday.today{border-color:var(--amber)}
+.wday.k-rest,.wday.k-blackout,.wday.k-skip{background:transparent;border-style:dashed}
+.wday.k-blackout{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(240,102,92,.08) 6px 8px)}
+.wd-h{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.wd-h b{color:var(--text);font-size:14px}
+.wd-f{margin-top:auto;font-size:12px;color:var(--up)}
+.wg{border-left:3px solid;padding:4px 8px;background:var(--ink);border-radius:0 4px 4px 0;font-size:12px}
+.wg-t{font-family:var(--mono);font-weight:600}.wg-n{color:var(--muted);font-size:11.5px;margin:1px 0 3px}.wg-l{font-size:11.5px}
+.wg.amber-l{border-left-color:var(--amber)}
+/* calendar */
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-bottom:14px}
+.lg-i i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-2px;margin-right:5px}
+.sw-bo{background:repeating-linear-gradient(135deg,transparent 0 3px,var(--down) 3px 4px)}.sw-rest{border:1px dashed var(--line2)}.sw-rev{border:1px solid var(--amber)}.sw-miss{background:rgba(240,102,92,.35)}
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.month{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px}
+.mh{font-weight:600;margin-bottom:6px}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cd{position:relative;aspect-ratio:1;border-radius:4px;font-family:var(--mono);font-size:12px;border:1px solid transparent;cursor:pointer;background:var(--ink)}
+.cd.hd{aspect-ratio:auto;padding:2px 0;text-align:center;color:var(--muted);font-size:11px;background:none;cursor:default}
+.cd.empty{background:none;cursor:default}
+.cd .n{position:absolute;top:3px;left:5px}
+.cd .mk{position:absolute;right:4px;top:2px;color:var(--amber);font-weight:700}
+.cd .lg{position:absolute;right:4px;bottom:2px;color:var(--up);font-size:10px}
+.cd.k-rest{opacity:.45;border-style:dashed;border-color:var(--line)}
+.cd.k-blackout{background:repeating-linear-gradient(135deg,var(--ink) 0 5px,rgba(240,102,92,.18) 5px 7px)!important}
+.cd.k-skip{background:rgba(240,102,92,.15)!important}
+.cd.k-extra{border-color:var(--up)}
+.cd.k-out{opacity:.2;cursor:default}
+.cd.k-exam{background:var(--amber)!important;color:var(--ink);font-weight:700}
+.cd.rev{border-color:var(--amber)}
+.cd.today{box-shadow:0 0 0 2px var(--text)}
+.cd.missed{background:rgba(240,102,92,.35)!important}
+.cd:hover:not(.hd):not(.empty){border-color:var(--text)}
+/* topics */
+.tcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:var(--r);margin-bottom:10px}
+.tcard summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:2fr 1fr 1.1fr 1fr 1.2fr 1fr;gap:10px;align-items:center;padding:12px 14px;font-size:13.5px}
+.tcard summary::-webkit-details-marker{display:none}
+.tc-name{font-weight:600;font-size:15px}
+.pbar{height:6px;background:var(--ink);border-radius:3px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--tc)}
+.lmhead,.lmrow{display:grid;grid-template-columns:44px 2.2fr .6fr .9fr 1.1fr 1fr 70px;gap:10px;align-items:center;padding:7px 14px;font-size:13px;border-top:1px solid var(--line)}
+.lmhead{color:var(--muted);font-size:11.5px}
+.lmn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* review */
+.mockrow,.borow,.orow{display:flex;align-items:center;gap:8px;padding:6px 0;flex-wrap:wrap}
+.mockrow input[type=text]{width:150px}
+.orow{border-left:3px solid;padding-left:10px;margin-bottom:4px;background:var(--panel);border-radius:0 4px 4px 0}
+.orow span:nth-child(2){flex:1}
+.weak{display:flex;flex-direction:column;gap:4px}
+.wk-i{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 10px;font-size:13px;display:flex;gap:8px}
+.wk-i b{font-family:var(--mono)}.wk-i .mono{margin-left:auto}
+.rvlist{display:flex;flex-direction:column;gap:4px}
+.rvrow{display:grid;grid-template-columns:100px 64px 1fr 220px 80px;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 10px;font-size:13px}
+.rvrow.today{border-color:var(--amber)}
+.rvrow input{font-size:12px;padding:3px 6px}
+/* settings */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.form label.inline{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px;grid-column:1/-1}
+.form label.inline input{width:80px}
+.form label input,.form label select{color:var(--text)}
+.form label.chip-l{flex-direction:row;align-items:center;grid-column:1/-1;color:var(--text)}
+.form-l{font-size:13px;color:var(--muted);margin-top:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:13px;color:var(--text)}
+.bolist{display:flex;flex-direction:column}
+/* responsive */
+@media (max-width:900px){
+  .grid2{grid-template-columns:1fr}
+  #app{flex-direction:column}
+  .nav{width:auto;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px;position:sticky;top:0;z-index:3;background:var(--ink)}
+  .nav .brand{display:none}
+  .nav button{white-space:nowrap;padding:8px 12px;font-size:13px}
+  #view{padding:14px 12px 60px}
+  .week{grid-template-columns:1fr}
+  .wday{min-height:auto}
+  .tcard summary{grid-template-columns:1fr 1fr;font-size:12.5px}
+  .lmhead{display:none}
+  .lmrow{grid-template-columns:44px 1fr;gap:4px 8px}
+  .rvrow{grid-template-columns:1fr 1fr;}
+  .form{grid-template-columns:1fr}
+  .row{flex-wrap:wrap;gap:8px}
+  .rw-main{flex:1 1 60%;min-width:0}
+  .qlog{flex-basis:100%}
+  .rw-r{margin-left:auto}
+  .stat .v{font-size:18px}
+  .rvrow{grid-template-columns:1fr 1fr}
+  .rvrow span:nth-child(3){grid-column:1/-1}
+  .rvrow input{grid-column:1/-1}
+  .lgr .lgl{flex:1 1 calc(100% - 60px);white-space:normal}
+  .lgr input.lg-d{order:9;flex-basis:100%;width:auto}
+  .bar .chips{flex-basis:100%}
+}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div id="ticker" aria-hidden="true"><div class="track"></div></div>
+<div id="app">
+  <nav class="nav" aria-label="Bölümler">
+    <div class="brand"><b>CFA Level I</b>Şubat 2027<br>Mark Meldrum + CFAI LES</div>
+    <button data-v="today">Bugün</button>
+    <button data-v="week">Hafta</button>
+    <button data-v="calendar">Takvim</button>
+    <button data-v="topics">Konular</button>
+    <button data-v="log">Kayıtlar</button>
+    <button data-v="review">Review ve mock</button>
+    <button data-v="settings">Ayarlar</button>
+  </nav>
+  <main id="view"></main>
+</div>
+<script>
+// ===== CFA L1 2027 — Kaynak verisi =====
+// Videolar: [etiket, süre "h:mm:ss" veya "mm:ss"]
+// les = CFAI LES toplam soru (Practice Pack dahil), pp = bunun Practice Pack kısmı, qb = MM Q-Bank soru
+// w = MM planner weighting, pg = CFAI sayfa
+
+const TOPICS = [
+{code:'QM', name:'Quantitative Methods', short:'Quant', color:'#2DD4BF', examW:[11,14], lms:[
+ [1,'Returns of Financial Assets and Instruments',0.99,36,[['Overview','13:56'],['LOSa','47:15'],['LOSb','59:33'],['EOMQ','15:55']],34,7,27],
+ [2,'Types of Financial Returns',0.75,23,[['Overview','8:56'],['LOSa','54:00'],['EOMQ','3:40']],6,2,26],
+ [3,'Benchmarking Returns',1.39,43,[['Overview','7:30'],['LOSa','22:04'],['LOSb','52:27'],['EOMQ','9:50']],33,12,19],
+ [4,'Time Value of Money in Finance',2.20,59,[['Overview','19:42'],['LOSa','1:13:24'],['LOSb','42:26'],['LOSc','49:07'],['EOMQ','17:34']],29,14,28],
+ [5,'Statistical Characteristics of Asset Returns',2.01,54,[['Overview','17:53'],['LOSa','40:46'],['LOSb','13:32'],['LOSc','20:29'],['LOSd','12:41'],['EOMQ','15:28']],39,14,43],
+ [6,'Statistical Distributions for Financial Asset Prices and Returns',2.01,54,[['Overview','19:14'],['LOSa','32:06'],['LOSb','33:10'],['LOSc','40:24'],['LOSd','34:18'],['EOMQ','21:50']],24,9,43],
+ [7,'Estimation and Hypothesis Testing',2.07,64,[['Overview','14:34'],['LOSa','42:42'],['LOSb','1:19:15'],['LOSc','27:59'],['EOMQ','15:58']],58,24,67],
+ [8,'The Return and Risk of a Financial Portfolio',2.14,66,[['Overview','16:22'],['LOSa','46:08'],['LOSb','18:06'],['LOSc','44:48'],['EOMQ','12:43']],19,6,18],
+ [9,'Simulation of Financial Asset Prices and Returns',1.62,50,[['Overview','6:22'],['LOSa','24:36'],['LOSb','22:22'],['LOSc','29:43'],['EOMQ','10:38']],19,6,21],
+ [10,'Applications of Simple Linear Regression in Finance',2.09,56,[['Overview','19:02'],['LOSa','23:34'],['LOSb','41:59'],['LOSc','25:29'],['LOSd','11:08'],['EOMQ','17:51']],29,12,38],
+ [11,'Introduction to Financial Data Science',0.91,28,[['Overview','3:34'],['LOSa','46:25'],['EOMQ','2:48']],12,5,21],
+]},
+{code:'FI', name:'Fixed Income', short:'Fixed Inc.', color:'#60A5FA', examW:[11,14], lms:[
+ [1,'Fixed-Income Instrument Features',0.55,17,[['Video','25:21'],['EOMQ','5:56']],12,4,22],
+ [2,'Fixed-Income Cash Flows and Types',1.04,28,[['Video','38:03'],['EOMQ','6:56']],18,7,27],
+ [3,'Fixed-Income Issuance and Trading',0.68,21,[['Video','19:18'],['EOMQ','2:45']],7,2,19],
+ [4,'Fixed-Income Markets for Corporate Issuers',0.81,25,[['Video','41:33'],['EOMQ','5:48']],11,3,23],
+ [5,'Fixed-Income Markets for Government Issuers',0.58,18,[['Video','23:01'],['EOMQ','3:55']],8,0,18],
+ [6,'Fixed-Income Bond Valuation: Prices and Yields',1.10,26,[['Video','38:48'],['Seminar – Full and Flat Prices and Matrix Pricing','24:20'],['EOMQ','7:05']],28,12,40],
+ [7,'Yield and Yield Spread Measures for Fixed-Rate Bonds',0.97,26,[['Video','30:19'],['EOMQ','7:27']],17,6,34],
+ [8,'Yield and Yield Spread Measures for Floating-Rate Instruments',0.71,19,[['Video','45:07'],['Seminar – DR versus AOR','4:39'],['EOMQ','7:59']],17,6,13],
+ [9,'The Term Structure of Interest Rates: Spot, Par, and Forward Curves',0.86,23,[['Video','29:29'],['EOMQ','10:38']],23,8,30],
+ [10,'Interest Rate Risk and Return',0.75,23,[['Video','31:25'],['EOMQ','8:27']],28,12,15],
+ [11,'Yield-Based Bond Duration Measures and Properties',1.10,26,[['Video','26:56'],['Seminar – ModDur, MacDur, and some calculus','19:15'],['EOMQ','9:17']],26,12,14],
+ [12,'Yield-Based Bond Convexity and Portfolio Properties',0.80,19,[['Video','14:14'],['Seminar – Why use Full Price when calculating ApproxModDur?','7:05'],['Seminar – Duration and Convexity','43:15'],['Seminar – Why are ModDur and EffDur different for the same bond?','4:55'],['EOMQ','8:46']],32,9,14],
+ [13,'Curve-Based and Empirical Fixed-Income Risk Measures',0.68,21,[['Video','22:40'],['EOMQ','7:00']],36,20,16],
+ [14,'Credit Risk',1.27,34,[['Video','33:12'],['EOMQ','5:42']],13,5,26],
+ [15,'Credit Analysis for Government Issuers',0.75,23,[['Video','22:54'],['EOMQ','5:44']],7,1,14],
+ [16,'Credit Analysis for Corporate Issuers',0.84,26,[['Video','21:23'],['EOMQ','11:16']],23,9,54],
+ [17,'Fixed-Income Securitization',0.55,17,[['Video','17:31'],['EOMQ','4:51']],14,3,9],
+ [18,'Asset-Backed Security (ABS) Instrument and Market Features',1.01,27,[['Video','30:13'],['EOMQ','10:02']],19,5,15],
+ [19,'Mortgage-Backed Security (MBS) Instrument and Market Features',1.26,30,[['Video','28:23'],['EOMQ','8:15']],27,7,44],
+]},
+{code:'DE', name:'Derivatives and Risk Management', short:'Deriv.', color:'#A78BFA', examW:[6,9], lms:[
+ [1,'Derivative Instrument and Derivative Market Features',0.44,16,[['Video','37:40'],['EOMQ','14:10']],22,7,16],
+ [2,'Forward Commitment and Contingent Claim Features and Instruments',1.01,27,[['Video','1:05:35'],['EOMQ','6:50']],36,16,55],
+ [3,'Derivative Benefits, Risks, and Issuer and Investor Uses',0.55,20,[['Video','30:55'],['EOMQ','10:25']],16,7,10],
+ [4,'Arbitrage, Replication, and the Cost of Carry in Pricing Derivatives',0.78,21,[['Video','59:33'],['EOMQ','15:32']],18,7,14],
+ [5,'Pricing and Valuation of Forward Contracts and for an Underlying with Varying Maturities',0.97,26,[['Video','57:05'],['EOMQ','26:09']],15,2,8],
+ [6,'Pricing and Valuation of Futures Contracts',0.63,17,[['Video','26:35'],['Seminar – Pricing and Valuation of Forwards and Futures','50:39'],['EOMQ','14:00']],12,6,11],
+ [7,'Pricing and Valuation of Interest Rate and Other Swaps',0.63,17,[['Video','51:49'],['EOMQ','15:46']],14,5,10],
+ [8,'Pricing and Valuation of Options',0.78,21,[['Video','35:48'],['EOMQ','26:59']],31,12,22],
+ [9,'Option Replication Using Put–Call Parity',0.55,17,[['Video','30:43'],['EOMQ','18:49']],25,12,18],
+ [10,'Valuing a Derivative Using a One-Period Binomial Model',0.52,16,[['Video','24:11'],['Seminar – Options Strategies','48:04'],['Seminar – Put-Call parity with Replication and Hedging','3:09'],['EOMQ','10:13']],15,5,9],
+]},
+{code:'AL', name:'Alternative Investments', short:'Alt. Inv.', color:'#FB923C', examW:[6,9], lms:[
+ [1,'Alternative Investment Features, Methods, and Structures',0.84,26,[['Video','24:37'],['EOMQ','4:31']],35,20,15],
+ [2,'Alternative Investment Performance and Returns',0.81,25,[['LOSa','31:39'],['LOSb','1:10:58'],['EOMQ','8:37']],32,15,11],
+ [3,'Investments in Private Capital: Equity and Debt',0.75,23,[['Video','42:31'],['EOMQ','10:12']],28,10,12],
+ [4,'Real Estate and Infrastructure',0.78,24,[['Video','23:24'],['EOMQ','10:44']],29,11,18],
+ [5,'Natural Resources',0.68,21,[['Video','47:03'],['EOMQ','7:09']],17,5,16],
+ [6,'Hedge Funds',0.91,28,[['Video','1:07:31'],['EOMQ','5:25']],21,6,16],
+ [7,'Introduction to Digital Assets',1.12,30,[['Video','35:45'],['EOMQ','11:16']],24,6,17],
+]},
+{code:'FS', name:'Financial Statement Analysis', short:'FSA', color:'#F87171', examW:[11,14], lms:[
+ [1,'Introduction to Financial Statement Analysis',0.80,29,[['Video','43:49'],['EOMQ','8:56']],36,7,55],
+ [2,'Analyzing Income Statements',1.29,47,[['Video','1:54:10'],['EOMQ','26:18']],53,16,57],
+ [3,'Analyzing Balance Sheets',0.72,26,[['Video','48:05'],['EOMQ','19:29']],21,4,40],
+ [4,'Analyzing Statements of Cash Flows I',0.84,26,[['Video','1:16:06'],['EOMQ','29:01']],40,14,35],
+ [5,'Analyzing Statements of Cash Flows II',0.52,16,[['Video','49:02'],['EOMQ','5:37']],15,6,18],
+ [6,'Analysis of Inventories',0.62,19,[['Video','25:41'],['EOMQ','53:05']],63,15,20],
+ [7,'Analysis of Long-Term Assets',0.71,22,[['Video','53:42'],['EOMQ','33:25']],54,17,24],
+ [8,'Topics in Long-Term Liabilities and Equity',1.00,31,[['Video','1:22:43'],['EOMQ','14:48']],29,6,15],
+ [9,'Analysis of Income Taxes',1.08,29,[['Video','56:08'],['Seminar – DTA and DTL','57:10'],['EOMQ','10:26']],19,6,33],
+ [10,'Financial Reporting Quality',2.01,62,[['Video','1:21:26'],['EOMQ','24:33']],45,4,82],
+ [11,'Financial Analysis Techniques',2.05,55,[['Video','1:36:41'],['EOMQ','32:37']],67,23,52],
+ [12,'Introduction to Financial Statement Modeling',1.49,46,[['Video','44:39'],['EOMQ','36:46']],30,5,26],
+], prereq:[
+ ['Introduction to Financial Reporting','33:33',112],
+ ['Income Statements','1:17:39',29],
+ ['Balance Sheets','44:17',43],
+ ['Cash Flow Statements','23:34',22],
+ ['Inventories','2:15:15',62],
+ ['Long-Lived Assets','1:02:45',36],
+ ['Income Taxes','43:09',34],
+ ['Non-Current (Long-Term) Liabilities','22:26',27],
+ ['Applications of Financial Statement Analysis','26:57',36],
+]},
+{code:'EQ', name:'Equities', short:'Equities', color:'#F472B6', examW:[11,14], lms:[
+ [1,'Equity Instrument Features',0.62,19,[['Overview','15:30'],['LOSa','21:04'],['LOSb','14:01'],['EOMQ','8:18']],17,8,6],
+ [2,'Equity Jurisdictions, Classes, and the Voting Process',0.55,17,[['Overview','15:08'],['LOSa','12:09'],['LOSb','7:35'],['EOMQ','10:07']],7,2,14],
+ [3,'Equity Issuance and Trading',0.87,27,[['Overview','20:28'],['LOSa','12:43'],['LOSb','14:09'],['LOSc','6:10'],['LOSd','9:05'],['EOMQ','10:12']],14,6,18],
+ [4,'Sources of Equity Returns',0.81,25,[['Overview','14:15'],['LOSa','17:55'],['LOSb','7:41'],['LOSc','15:53'],['EOMQ','19:56']],18,10,15],
+ [5,'Introduction to Equity Valuation',1.17,36,[['Overview','10:18'],['LOSa','10:09'],['LOSb','20:01'],['LOSc','13:34'],['Seminar – MV vs. IV','8:43'],['Seminar – Valuation Models','5:03'],['EOMQ','21:07']],32,16,15],
+ [6,'Discounted Cash Flow (DCF) and Growth Models',2.57,61,[['Overview','17:05'],['LOSa','16:16'],['LOSb','13:17'],['LOSc','7:21'],['LOSd','6:26'],['EOMQ','13:54']],30,17,13],
+ [7,'Relative Value Equity Valuation Approaches',1.85,57,[['Overview','15:54'],['LOSa','12:51'],['LOSb','20:45'],['LOSc','5:45'],['LOSd','6:51'],['EOMQ','31:13']],26,15,13],
+ [8,'Financial Statement Forecasting in Equity Valuation',2.27,61,[['Overview','8:13'],['LOSa','12:15'],['LOSb','12:03'],['LOSc','12:30'],['EOMQ','22:42']],17,11,20],
+ [9,'Industry and Competitive Analysis',1.36,42,[['Overview','9:18'],['LOSa','7:55'],['LOSb','9:05'],['LOSc','12:33'],['LOSd','24:13'],['EOMQ','17:25']],21,11,35],
+ [10,'Company Analysis: Past, Present, and Future',1.26,39,[['Overview','11:08'],['LOSa','14:35'],['LOSb','15:05'],['LOSc','16:27'],['EOMQ','12:43']],14,8,21],
+ [11,'Equity Analyst Research Reports',1.23,38,[['Overview','11:11'],['LOSa','9:47'],['LOSb','12:16'],['LOSc','9:43'],['EOMQ','9:55']],11,5,14],
+ [12,'The Capital Asset Pricing Model, Market Model, and Other Factor-Based Equity Models',1.13,35,[['Overview','10:09'],['LOSa','20:37'],['LOSb','13:59'],['EOMQ','17:33']],11,5,11],
+]},
+{code:'PC', name:'Portfolio Construction', short:'Portfolio', color:'#818CF8', examW:[8,12], lms:[
+ [1,'Portfolio Risk and Return: Part I',1.52,47,[['Video','3:04:03'],['EOMQ','31:35'],['Review','22:26']],58,15,44],
+ [2,'Portfolio Risk and Return: Part II',1.56,48,[['Video','2:39:08'],['Seminar – CML vs SML','31:19'],['EOMQ','29:29'],['Review','13:46']],96,30,66],
+ [3,'Portfolio Management: An Overview',1.07,33,[['Video','59:26'],['EOMQ','9:23'],['Review','12:18']],41,15,110],
+ [4,'Basics of Portfolio Planning and Construction',1.23,38,[['Video','40:56'],['EOMQ','12:47'],['Review','7:46']],57,24,43],
+ [5,'The Behavioral Biases of Individuals',0.97,30,[['Video','1:01:51'],['EOMQ','11:44'],['Review','13:11']],28,8,26],
+ [6,'Introduction to Risk Management',1.49,46,[['Video','1:18:56'],['Seminar – Why do we multiply sd by the square root of T?','13:41'],['EOMQ','21:39'],['Review','12:48']],42,11,42],
+]},
+{code:'EC', name:'Economics', short:'Econ', color:'#A3E635', examW:[6,9], lms:[
+ [1,'The Firm and Market Structures',1.36,42,[['Video','1:42:52'],['EOMQ','8:23']],52,16,35],
+ [2,'Understanding Business Cycles',0.69,25,[['Video','55:15'],['Seminar – Economic Indicators','14:40'],['EOMQ','17:38']],22,6,15],
+ [3,'Fiscal Policy',0.78,24,[['Video','51:13'],['EOMQ','6:05']],25,11,19],
+ [4,'Monetary Policy',1.07,33,[['Video','45:48'],['EOMQ','9:38']],40,17,25],
+ [5,'Introduction to Geopolitics',1.56,48,[['Video','1:03:22'],['EOMQ','15:21']],28,9,28],
+ [6,'International Trade',0.52,16,[['Video','29:14'],['EOMQ','8:13']],14,4,24],
+ [7,'Capital Flows and the FX Market',1.30,35,[['Video','1:19:54'],['EOMQ','2:57']],18,8,39],
+ [8,'Exchange Rate Calculations',0.55,13,[['Video','27:35'],['EOMQ','10:01']],26,7,21],
+], prereq:[
+ ['Topics in Demand and Supply Analysis','1:00:33',50],
+ ['Introduction to the Firm and Market Organization','33:30',28],
+ ['Aggregate Output, Prices, and Economic Growth','2:38:36',63],
+ ['Introduction to Business Cycles','1:17:32',23],
+ ['Monetary and Fiscal Policy','52:42',18],
+ ['International Trade and Capital Flows','1:29:38',23],
+ ['Currency Exchange Rates','1:28:12',0],
+]},
+{code:'CF', name:'Corporate Finance', short:'Corp. Fin.', color:'#22D3EE', examW:[6,9], lms:[
+ [1,'Organizational Forms, Corporate Issuer Features, and Ownership',1.00,31,[['Video','50:09'],['EOMQ','13:32']],18,7,17],
+ [2,'Investors and Other Stakeholders',0.81,25,[['Video','38:52'],['EOMQ','14:29']],15,5,13],
+ [3,'Corporate Governance: Conflicts, Mechanisms, Risks, and Benefits',0.81,25,[['Video','52:42'],['EOMQ','8:35']],23,11,15],
+ [4,'Working Capital and Liquidity',1.30,35,[['Video','1:16:26'],['EOMQ','6:46']],18,5,25],
+ [5,'Capital Investments and Capital Allocation',1.27,34,[['Video','1:29:06'],['EOMQ','10:41']],30,12,44],
+ [6,'Capital Structure',1.30,35,[['Video','1:40:46'],['EOMQ','14:29']],46,24,37],
+ [7,'Business Models',0.84,26,[['Video','45:47'],['EOMQ','16:25']],16,6,9],
+]},
+{code:'ET', name:'Ethical and Professional Standards', short:'Ethics', color:'#FBBF24', examW:[10,15], lms:[
+ [1,'Ethics and Trust in the Investment Profession',0.84,26,[['Video','43:00'],['EOMQ','16:53']],27,2,40],
+ [2,'Code of Ethics and Standards of Professional Conduct',0.49,15,[['Video','20:18'],['EOMQ','10:23']],24,3,48],
+ [3,'Guidance for Standard I: Professionalism',1.20,37,[['Video','1:02:03'],['EOMQ','15:11']],44,22,13],
+ [4,'Guidance for Standard II: Integrity of Capital Markets',0.49,15,[['Video','31:28'],['EOMQ','13:57']],25,11,8],
+ [5,'Guidance for Standard III: Duties to Clients',1.13,35,[['Video','51:34'],['EOMQ','24:25']],64,27,19],
+ [6,'Guidance for Standard IV: Duties to Employers',0.62,19,[['Video','35:00'],['EOMQ','11:47']],31,14,9],
+ [7,'Guidance for Standard V: Investment Analysis, Recommendations, and Actions',0.75,23,[['Video','38:23'],['EOMQ','7:15']],29,16,12],
+ [8,'Guidance for Standard VI: Conflicts of Interest',0.45,14,[['Video','26:59'],['EOMQ','8:18']],31,15,8],
+ [9,'Guidance for Standard VII: Responsibilities as a CFA Institute Member or CFA Candidate',0.36,11,[['Video','16:37'],['EOMQ','5:15']],15,8,13],
+ [10,'Application of the Code and Standards: Level I',1.36,42,[['Video','3:22:38']],0,0,0],
+]},
+];
+
+// Doğrulama hedefleri (kaynak ekran görüntülerinden)
+const CHECK = {
+ video: {QM:'23:23:16',FI:'13:01:08',DE:'11:20:39',AL:'6:41:22',FS:'18:44:23',EQ:'14:02:12',PC:'13:48:12',EC:'9:08:09',CF:'8:58:45',ET:'10:41:24'},
+ prereqVideo: {FS:'7:49:35',EC:'9:20:43'},
+ les: {QM:302,FI:366,DE:204,AL:186,FS:472,EQ:218,PC:322,EC:225,CF:166,ET:290},
+ pp: 1000,
+ qb: {QM:351,FI:447,DE:173,AL:105,FS:457,EQ:195,PC:331,EC:206,CF:160,ET:170},
+ prereqQb: {FS:401,EC:205},
+ weight: 106.73,
+ lmCount: 102, videoCount: 308-16,
+};
+if (typeof module!=='undefined') module.exports={TOPICS,CHECK};
+
+// ===================== YARDIMCILAR =====================
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const toS = s => { const p = s.split(':').map(Number); return p.length===3 ? p[0]*3600+p[1]*60+p[2] : p[0]*60+p[1]; };
+const pad = n => String(n).padStart(2,'0');
+const fmtHM = min => { min=Math.round(min); const h=Math.floor(min/60), m=min%60; return h ? `${h}s ${pad(m)}dk` : `${m}dk`; };
+const fmtH = min => (min/60).toFixed(1).replace('.',',') + ' sa';
+const fmtPct = v => String(Number(v)||0).replace('.',',');
+const fmtClock = sec => { const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return h?`${h}:${pad(m)}:${pad(s)}`:`${m}:${pad(s)}`; };
+const DAYS_TR = ['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+const DAYS_TR_LONG = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+const MONTHS_TR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const parseD = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addDays = (s,n) => { const d=parseD(s); d.setDate(d.getDate()+n); return iso(d); };
+const diffDays = (a,b) => Math.round((parseD(b)-parseD(a))/86400000);
+const todayIso = () => iso(new Date());
+const fmtDate = (s, long=false) => { const d=parseD(s); return long ? `${d.getDate()} ${MONTHS_TR[d.getMonth()]} ${d.getFullYear()}, ${DAYS_TR_LONG[d.getDay()]}` : `${d.getDate()} ${MONTHS_TR[d.getMonth()].slice(0,3)}`; };
+const fmtDateShort = s => { const d=parseD(s); return `${DAYS_TR[d.getDay()]} ${d.getDate()} ${MONTHS_TR[d.getMonth()].slice(0,3)}`; };
+const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2,9);
+
+// ===================== DURUM =====================
+const DEFAULTS = () => ({
+  settings: {
+    startDate:'2026-09-09', examDate:'2027-02-25', reviewStart:'2027-01-27',
+    dailyHours:3, restDays:[0],
+    blackouts:[
+      {id:uid(),from:'2026-10-02',to:'2026-10-02',label:''},
+      {id:uid(),from:'2026-10-07',to:'2026-10-07',label:''},
+      {id:uid(),from:'2026-12-22',to:'2026-12-22',label:''},
+      {id:uid(),from:'2026-12-28',to:'2027-01-05',label:'Yılbaşı'},
+      {id:uid(),from:'2027-01-20',to:'2027-01-22',label:''},
+      {id:uid(),from:'2027-02-01',to:'2027-02-06',label:''},
+    ],
+    videoFactor:1.25, minPerQ:2.5, prereq:false, qbMode:'auto', qbQuota:100,
+    order:['QM','FI','DE','AL','FS','EQ','PC','EC','CF','ET'],
+    examW:{QM:12.5,FI:12.5,DE:7.5,AL:7.5,FS:12.5,EQ:12.5,PC:10,EC:7.5,CF:7.5,ET:12.5}, // 2027 resmi aralık orta noktaları
+  },
+  overrides:{}, items:{}, free:[], acc:{},
+  mocks:[
+    {id:uid(),name:'CFAI Mock A',date:'2027-01-30',s1:'',s2:''},
+    {id:uid(),name:'CFAI Mock 1',date:'2027-02-13',s1:'',s2:''},
+    {id:uid(),name:'CFAI Mock 2',date:'2027-02-20',s1:'',s2:''},
+  ],
+  reviewNotes:{},
+});
+const KEY='cfa-l1-planner-v1';
+let memStore=null;
+function load(){ try{ const raw=localStorage.getItem(KEY); if(raw) return mergeDefaults(JSON.parse(raw)); }catch(e){} return memStore ? memStore : DEFAULTS(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ memStore=S; } }
+// Eski kayıt biçimlerini yeni biçime taşır (idempotent: iki kez çalışsa da veri çoğalmaz)
+function migrate(o){
+  // v1: dayLog[date]={extra,note} (günde tek kayıt) -> free[] (günde çok kayıt)
+  if(o.dayLog){
+    o.free=Array.isArray(o.free)?o.free:[];
+    for(const d of Object.keys(o.dayLog).sort()){ const e=o.dayLog[d]||{}; const m=Number(e.extra)||0, note=String(e.note||'').trim(); if(m>0||note) o.free.push({id:uid(),d,m,note}); }
+    delete o.dayLog;
+  }
+  if(!Array.isArray(o.free)) o.free=[];
+  for(const e of o.free){ if(!e.id) e.id=uid(); if(e.m===undefined||e.m===null||e.m==='') e.m=0; else e.m=Number(e.m)||0; }
+  // v1: log kayıtlarında id yoktu -> düzenleme/silme için id ekle
+  for(const id in (o.items||{})){ const it=o.items[id]; if(!it||!Array.isArray(it.log)) continue; for(const e of it.log) if(!e.id) e.id=uid(); }
+  return o;
+}
+function mergeDefaults(obj){ const d=DEFAULTS(); const out={...d,...obj}; out.settings={...d.settings,...(obj.settings||{})}; return migrate(out); }
+let S = load();
+
+// ===================== TAKVİM KAPASİTESİ =====================
+function isBlackout(date){ return S.settings.blackouts.some(b => date>=b.from && date<=b.to); }
+function baseCapacity(date){
+  const s=S.settings;
+  if(date < s.startDate || date >= s.examDate) return 0;
+  if(isBlackout(date)) return 0;
+  if(s.restDays.includes(parseD(date).getDay())) return 0;
+  return s.dailyHours*60;
+}
+function capacity(date){ const o=S.overrides[date]; if(o!==undefined && o!==null && o!=='') return Number(o)*60; return baseCapacity(date); }
+function dayKind(date){
+  const s=S.settings;
+  if(date===s.examDate) return 'exam';
+  if(date < s.startDate || date > s.examDate) return 'out';
+  const o=S.overrides[date];
+  if(o!==undefined && o!==null && o!=='') return Number(o)>0 ? (baseCapacity(date)>0?'work':'extra') : 'skip';
+  if(isBlackout(date)) return 'blackout';
+  if(s.restDays.includes(parseD(date).getDay())) return 'rest';
+  return 'work';
+}
+function sumCapacity(from,to){ let t=0; for(let d=from; d<=to; d=addDays(d,1)) t+=capacity(d); return t; }
+
+// ===================== İŞ KALEMLERİ =====================
+function itemLog(id){ return (S.items[id]&&S.items[id].log)||[]; }
+function doneCount(id){ return itemLog(id).reduce((a,e)=>a+(e.c||0),0); }
+function actualMin(id){ return itemLog(id).reduce((a,e)=>a+(e.m||0),0); }
+function topicByCode(c){ return TOPICS.find(t=>t.code===c); }
+
+// Kota hesaplanmadan ham liste
+function buildRaw(){
+  const s=S.settings, out=[];
+  for(const code of s.order){
+    const t=topicByCode(code); if(!t) continue;
+    if(s.prereq && t.prereq){
+      t.prereq.forEach((p,i)=>{
+        out.push({id:`${code}-pre${i+1}-v`,topic:code,lm:0,lmName:'Prereq',type:'video',tier:4,label:`Prereq ${i+1} – ${p[0]}`,sec:toS(p[1]),est:toS(p[1])/60*s.videoFactor});
+        if(p[2]>0) out.push({id:`${code}-pre${i+1}-qb`,topic:code,lm:0,lmName:'Prereq',type:'q',src:'qb',tier:4,label:`Prereq ${i+1} Q-Bank`,count:p[2],target:p[2]});
+      });
+    }
+    for(const lm of t.lms){
+      const [n,name,w,pg,vids,les,pp,qb]=lm;
+      vids.forEach((v,i)=>out.push({id:`${code}-${n}-v${i+1}`,topic:code,lm:n,lmName:name,type:'video',tier:1,label:v[0],sec:toS(v[1]),est:toS(v[1])/60*s.videoFactor}));
+      if(les>0) out.push({id:`${code}-${n}-les`,topic:code,lm:n,lmName:name,type:'q',src:'les',tier:2,label:'CFAI LES soruları',count:les,pp,target:les});
+      if(qb>0) out.push({id:`${code}-${n}-qb`,topic:code,lm:n,lmName:name,type:'q',src:'qb',tier:3,label:'MM Q-Bank',count:qb,target:qb});
+    }
+  }
+  return out;
+}
+function remainingMin(it){
+  if(it.type==='video') return doneCount(it.id)>0 ? 0 : it.est;
+  return Math.max(0, it.target-doneCount(it.id))*S.settings.minPerQ;
+}
+function fullMin(it){ return it.type==='video' ? it.est : it.count*S.settings.minPerQ; }
+
+// Kota: kalan sabit iş + Q-Bank kalanı review başlangıcına sığmalı
+function computeQuota(items, from){
+  const s=S.settings;
+  if(s.qbMode==='manual') return clamp(Number(s.qbQuota)||0,0,100)/100;
+  const cap=sumCapacity(from, addDays(s.reviewStart,-1));
+  let fixed=0, t3=0;
+  for(const it of items){ if(it.tier===3) t3+=Math.max(0,it.count-doneCount(it.id))*s.minPerQ; else fixed+=remainingMin(it); }
+  if(t3<=0) return 1;
+  return clamp((cap*0.99-fixed)/t3, 0, 1);
+}
+function buildItems(from){
+  const items=buildRaw();
+  const q=computeQuota(items, from);
+  for(const it of items) if(it.tier===3){ const d=doneCount(it.id); it.target=d+Math.floor((it.count-d)*q); }
+  return {items, quota:q};
+}
+
+// ===================== PROJEKSİYON =====================
+// Kuyruğu 'from' tarihinden itibaren kapasiteye döker
+function project(from, useProgress=true){
+  const s=S.settings;
+  const {items, quota}= useProgress ? buildItems(from) : (()=>{ const items=buildRaw(); const q=computeQuotaBaseline(items); for(const it of items) if(it.tier===3) it.target=Math.floor(it.count*q); return {items,quota:q}; })();
+  const dayPlan={}, itemDays={};
+  let date=from, capLeft=capacity(date), lastDate=null, overflowMin=0;
+  const end=s.examDate;
+  for(const it of items){
+    let rem = useProgress ? remainingMin(it) : (it.type==='video'?it.est:it.target*s.minPerQ);
+    if(rem<=0.01) continue;
+    while(rem>0.01){
+      while(capLeft<=0.01){ date=addDays(date,1); if(date>=end) break; capLeft=capacity(date); }
+      if(date>=end){ overflowMin+=rem; itemDays[it.id]=itemDays[it.id]||[]; itemDays[it.id].push({date:null,min:rem}); rem=0; break; }
+      const a=Math.min(rem,capLeft);
+      (dayPlan[date]=dayPlan[date]||[]).push({id:it.id,min:a,part:a<rem||(itemDays[it.id]&&itemDays[it.id].length)});
+      (itemDays[it.id]=itemDays[it.id]||[]).push({date,min:a});
+      rem-=a; capLeft-=a; lastDate=date;
+    }
+  }
+  return {items, quota, dayPlan, itemDays, learningEnd:lastDate, overflowMin};
+}
+function computeQuotaBaseline(items){
+  const s=S.settings; if(s.qbMode==='manual') return clamp(Number(s.qbQuota)||0,0,100)/100;
+  const cap=sumCapacity(s.startDate, addDays(s.reviewStart,-1));
+  let fixed=0,t3=0; for(const it of items){ if(it.tier===3) t3+=it.count*s.minPerQ; else fixed+=fullMin(it); }
+  return t3<=0?1:clamp((cap*0.99-fixed)/t3,0,1);
+}
+function planFrom(){ const t=todayIso(); return t<S.settings.startDate ? S.settings.startDate : t; }
+
+// Günlük gerçekleşen
+function freeMin(date){ let m=0; for(const e of S.free) if(e.d===date) m+=Number(e.m)||0; return m; }
+function loggedMin(date){
+  let m=0;
+  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d===date) m+=e.m||0;
+  return m+freeMin(date);
+}
+// 'date' dahil o güne kadar biriken gerçek çalışma
+function actualUpTo(date){
+  let m=0;
+  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d<=date) m+=e.m||0;
+  for(const e of S.free) if(e.d<=date) m+=Number(e.m)||0;
+  return m;
+}
+function totals(items){
+  let est=0, done=0, vidT=0, vidD=0, lesT=0, lesD=0, qbT=0, qbD=0, qbAll=0;
+  for(const it of items){
+    if(it.type==='video'){ vidT++; if(doneCount(it.id)>0){vidD++; done+=it.est;} est+=it.est; }
+    else { const d=doneCount(it.id); est+=it.target*S.settings.minPerQ; done+=Math.min(d,it.target)*S.settings.minPerQ;
+      if(it.src==='les'){lesT+=it.count; lesD+=d;} else if(it.tier===3){qbT+=it.target; qbD+=d; qbAll+=it.count;} }
+  }
+  return {est,done,vidT,vidD,lesT,lesD,qbT,qbD,qbAll};
+}
+function actualTotal(){ let m=0; for(const id in S.items) m+=actualMin(id); for(const e of S.free) m+=Number(e.m)||0; return m; }
+function isSkipOverride(date){ const o=S.overrides[date]; return o!==undefined && o!==null && o!=='' && Number(o)===0 && baseCapacity(date)>0; }
+
+// ===================== ANA HESAP =====================
+let P=null; // güncel projeksiyon
+function recompute(){
+  const from=planFrom();
+  P=project(from,true);
+  P.from=from;
+  P.tot=totals(P.items);
+  P.actual=actualTotal();
+  const s=S.settings;
+  P.capLearn=sumCapacity(s.startDate, addDays(s.reviewStart,-1));
+  P.capReview=sumCapacity(s.reviewStart, addDays(s.examDate,-1));
+  P.capTotal=P.capLearn+P.capReview;
+  P.capUsedByOverflow=0;
+  for(const d in P.dayPlan) if(d>=s.reviewStart) for(const e of P.dayPlan[d]) P.capUsedByOverflow+=e.min;
+  P.reviewLeft=P.capReview-P.capUsedByOverflow;
+  P.daysToExam=diffDays(todayIso(), s.examDate);
+  P.slip = P.learningEnd ? diffDays(addDays(s.reviewStart,-1), P.learningEnd) : 0; // + = geç
+  // Sapma "dünkü kapanış" bazında: bugünün kapasitesi henüz plana sayılmaz, bugünün çalışması da sapmaya girmez
+  const t=todayIso(), y=addDays(t,-1);
+  P.plannedToDate = sumCapacity(s.startDate, y);   // y < startDate ise 0
+  P.actualToDate = actualUpTo(y);
+  P.variance = P.actualToDate - P.plannedToDate;
+  P.todayMin = loggedMin(t); P.todayCap = capacity(t);
+  // atlanan günler (override 0 olan normal çalışma günleri)
+  P.skipped={n:0,min:0};
+  for(let d=s.startDate; d<s.examDate; d=addDays(d,1)) if(isSkipOverride(d)){ P.skipped.n++; P.skipped.min+=baseCapacity(d); }
+}
+
+// ===================== UI =====================
+let view='today', weekAnchor=null, calCursor=null, logFilter='all', pasteOpen=false;
+const TOPIC_BY={}; TOPICS.forEach(t=>TOPIC_BY[t.code]=t);
+function topicColor(code){ return TOPIC_BY[code]?TOPIC_BY[code].color:'#888'; }
+function tierName(t){ return {1:'Video',2:'LES',3:'Q-Bank',4:'Prereq'}[t]; }
+
+function render(){
+  recompute();
+  renderTicker();
+  const el=$('#view');
+  ({today:renderToday, week:renderWeek, calendar:renderCalendar, topics:renderTopics, log:renderLog, review:renderReview, settings:renderSettings}[view])(el);
+  $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+  save();
+}
+
+function renderTicker(){
+  const s=S.settings;
+  const vsign=v=>v>=0?'▲':'▼';
+  const items=[
+    ['Sınava', `${P.daysToExam} gün`],
+    ['Bugün', `${fmtHM(P.todayMin)} / ${fmtHM(P.todayCap)}`, P.todayCap&&P.todayMin>=P.todayCap?'up':''],
+    ['Biriken', fmtH(P.actual)],
+    ['Plana göre · dün kapanış', fmtH(P.plannedToDate)],
+    ['Sapma · dün kapanış', `${vsign(P.variance)} ${fmtH(Math.abs(P.variance))}`, P.variance>=0?'up':'down'],
+    ['Atlanan', `${P.skipped.n} gün · ${fmtH(P.skipped.min)}`, P.skipped.n?'down':''],
+    ['Öğrenme bitişi', P.learningEnd?fmtDate(P.learningEnd):'—', P.slip>0?'down':'up'],
+    ['Review başlangıcı', fmtDate(s.reviewStart)],
+    ['Review için kalan', fmtH(P.reviewLeft), P.reviewLeft<40*60?'down':'up'],
+    ['Q-Bank kotası', `%${Math.round(P.quota*100)}`],
+    ['Video', `${P.tot.vidD}/${P.tot.vidT}`],
+    ['LES', `${P.tot.lesD}/${P.tot.lesT}`],
+    ['Q-Bank', `${P.tot.qbD}/${P.tot.qbT}`],
+  ];
+  const html=items.map(([k,v,c])=>`<span class="tk"><span class="tk-k">${k}</span><span class="tk-v ${c||''}">${v}</span></span>`).join('');
+  $('#ticker .track').innerHTML=html+html;
+}
+
+// ---------- BUGÜN ----------
+function itemRowHtml(it, planMin, opts={}){
+  const t=TOPIC_BY[it.topic]; const dc=doneCount(it.id);
+  const lmTag=it.lm?`${it.topic} LM${it.lm}`:it.topic;
+  const when=opts.next?` · <span class="dim">plan ${opts.date?fmtDate(opts.date):'sığmıyor'}</span>`:'';
+  if(it.type==='video'){
+    const done=dc>0;
+    return `<div class="row ${done?'done':''} ${opts.next?'next':''}" data-id="${it.id}">
+      <label class="chk"><input type="checkbox" data-act="vid" data-id="${it.id}" ${done?'checked':''}><span></span></label>
+      <div class="rw-main">
+        <div class="rw-t"><b style="color:${t.color}">${lmTag}</b> ${esc(it.lmName)}</div>
+        <div class="rw-s">${esc(it.label)} · ${fmtClock(it.sec)} izleme${opts.part?` · <em>bugün ${fmtHM(planMin)}</em>`:''}${when}</div>
+      </div>
+      <div class="rw-r mono">${fmtHM(it.est)}<span class="dim"> tahmin</span></div>
+      <input class="mini mono" type="number" min="1" placeholder="dk" data-min="${it.id}" title="Gerçek süre (boş = tahmin)">
+    </div>`;
+  }
+  const left=Math.max(0,it.target-dc);
+  const planQ=Math.round(planMin/S.settings.minPerQ);
+  const today=opts.next?`~${planQ} soru`:`bugün ~${planQ} soru`;
+  return `<div class="row ${left===0?'done':''} ${opts.next?'next':''}" data-id="${it.id}">
+    <div class="qmark ${it.src}">${it.src==='les'?'LES':'QB'}</div>
+    <div class="rw-main">
+      <div class="rw-t"><b style="color:${t.color}">${lmTag}</b> ${esc(it.lmName)}</div>
+      <div class="rw-s">${esc(it.label)} · ${today} · ${dc}/${it.target} çözüldü${it.tier===3&&it.target<it.count?` <span class="dim">(kota, toplam ${it.count})</span>`:''}${it.pp?` <span class="dim">· ${it.pp}'i Practice Pack</span>`:''}${when}</div>
+    </div>
+    <div class="qlog">
+      <input class="mini mono" type="number" min="1" placeholder="soru" data-qc="${it.id}">
+      <input class="mini mono" type="number" min="1" placeholder="dk" data-qm="${it.id}">
+      <button class="btn sm" data-act="qlog" data-id="${it.id}">Kaydet</button>
+    </div>
+  </div>`;
+}
+// Kuyrukta sırada bekleyen (bugüne planlanmamış) ilk n öğe
+function queueNext(excludeIds, n){
+  const out=[];
+  for(const it of P.items){ if(excludeIds.has(it.id)) continue; if(remainingMin(it)<=0.01) continue; out.push(it); if(out.length>=n) break; }
+  return out;
+}
+
+// ---------- KAYIT SATIRLARI (Bugün paneli + Kayıtlar sekmesi ortak) ----------
+function findLog(itemId, eid){ const it=S.items[itemId]; return it&&it.log ? it.log.find(e=>e.id===eid) : null; }
+function findFree(eid){ return S.free.find(e=>e.id===eid); }
+function dayEntries(date){
+  const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  const out=[];
+  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d===date) out.push({kind:'item',id,item:byId[id]||null,e});
+  for(const e of S.free) if(e.d===date) out.push({kind:'free',e});
+  out.sort((a,b)=>(a.e.ts||0)-(b.e.ts||0));
+  return out;
+}
+function entryRowHtml(x, opts={}){
+  const e=x.e;
+  const dateInp = opts.date ? `<input type="date" class="mono lg-d" value="${e.d}" ${x.kind==='item'?`data-led="${x.id}"`:`data-fed="${e.id}"`} data-eid="${e.id}">` : '';
+  if(x.kind==='free'){
+    return `<div class="lgr"><span class="qmark fr">SERB</span>${dateInp}<input class="wide" type="text" value="${esc(e.note||'')}" placeholder="not" data-fen="${e.id}"><span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.m}" data-fem="${e.id}"><span class="dim">dk</span></span><button class="ghost" data-act="fe-del" data-eid="${e.id}" title="Sil">✕</button></div>`;
+  }
+  const it=x.item;
+  const del=`<button class="ghost" data-act="le-del" data-item="${x.id}" data-eid="${e.id}" title="Sil (öğe kuyruğa döner)">✕</button>`;
+  const minInp=`<span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.m||0}" data-lem="${x.id}" data-eid="${e.id}"><span class="dim">dk</span></span>`;
+  if(!it){ // müfredatta şu an olmayan öğe (ör. prereq kapalı)
+    return `<div class="lgr"><span class="qmark">?</span>${dateInp}<span class="lgl mono dim">${esc(x.id)}</span>${e.c>1?`<span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.c}" data-lec="${x.id}" data-eid="${e.id}"><span class="dim">soru</span></span>`:''}${minInp}${del}</div>`;
+  }
+  const t=TOPIC_BY[it.topic]; const lmTag=it.lm?`${it.topic} LM${it.lm}`:it.topic;
+  const label=`<span class="lgl"><b style="color:${t.color}">${lmTag}</b> ${esc(it.lmName)} <span class="dim">· ${esc(it.label)}</span></span>`;
+  if(it.type==='video') return `<div class="lgr"><span class="qmark vid">▶</span>${dateInp}${label}${minInp}${del}</div>`;
+  return `<div class="lgr"><span class="qmark ${it.src}">${it.src==='les'?'LES':'QB'}</span>${dateInp}${label}<span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.c||0}" data-lec="${x.id}" data-eid="${e.id}"><span class="dim">soru</span></span>${minInp}${del}</div>`;
+}
+
+function renderToday(el){
+  const t=todayIso(), s=S.settings;
+  const cap=capacity(t), kind=dayKind(t);
+  const plan=P.dayPlan[t]||[];
+  const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  let head='';
+  if(t<s.startDate) head=`<div class="note">Plan ${fmtDate(s.startDate,true)} günü başlıyor. Aşağıda ilk günün hedefi var.</div>`;
+  else if(kind==='rest') head=`<div class="note">Bugün dinlenme günü. Çalışırsan aşağıdaki <b>Sırada</b> listesinden kaydet; plana sayılmaz, sapmaya artı yazar.</div>`;
+  else if(kind==='blackout') head=`<div class="note">Bugün blackout günü olarak işaretli. Çalışabilirsen <b>Sırada</b> listesinden kaydet.</div>`;
+  else if(kind==='skip') head=`<div class="note">Bugünü atladın (0 saat). <button class="btn sm" data-act="ovr-clear" data-date="${t}">Geri al</button></div>`;
+  else head=`<div class="note quiet">Kapasite ${fmtHM(cap)}${kind==='extra'?' (ek gün)':''}. Çalışamayacaksan: <button class="btn sm" data-act="skip-today">Bugünü atla</button></div>`;
+
+  const showDate = t<s.startDate ? s.startDate : t;
+  const list=(t<s.startDate ? (P.dayPlan[s.startDate]||[]) : plan);
+  const rows=list.map(e=>itemRowHtml(byId[e.id], e.min, {part:e.part})).join('') || `<div class="empty">${t>=s.reviewStart?'Öğrenme kuyruğu bitti — review fazındasın. Review sekmesine bak.':cap>0?'Bugünün planı tamamlandı.':'Bugün için planlanmış öğe yok.'}</div>`;
+
+  // sırada bekleyenler
+  const planned=new Set(list.map(e=>e.id));
+  const nxt=queueNext(planned, 8);
+  const nextRows=nxt.map(it=>{ const fd=(P.itemDays[it.id]||[])[0]; return itemRowHtml(it, fd?fd.min:remainingMin(it), {next:true, date:fd?fd.date:null}); }).join('');
+  const nextOpen = list.length===0 || cap===0;
+  const nextHtml = nxt.length ? `<details class="nextbox" ${nextOpen?'open':''}><summary>Sırada <span class="dim">· kuyruğun sonraki ${nxt.length} öğesi, buradan da kaydedebilirsin</span></summary><div class="rows">${nextRows}</div></details>` : '';
+
+  // review fazı bilgisi
+  const inReview = t>=s.reviewStart && t<s.examDate;
+  const mockToday=S.mocks.find(m=>m.date===t);
+
+  // bugün kaydedilenler
+  const ents=dayEntries(showDate);
+  const logHtml = ents.length
+    ? `<div class="loglist">${ents.map(x=>entryRowHtml(x)).join('')}</div>`
+    : `<div class="empty quiet">Henüz kayıt yok.</div>`;
+
+  el.innerHTML=`
+  <div class="grid2">
+    <section class="col">
+      <h1>${fmtDate(showDate,true)}</h1>
+      ${head}
+      ${inReview?`<div class="note amber">Review fazı. ${mockToday?`<b>Bugün ${esc(mockToday.name)}</b> günü.`:''} Bugünün review hedefi Review sekmesinde.</div>`:''}
+      <div class="rows">${rows}</div>
+      ${nextHtml}
+      <div class="extra">
+        <div class="rw-t">Serbest çalışma <span class="dim">(review, formül, not çıkarma, mock)</span></div>
+        <div class="qlog"><input class="mini mono" type="number" min="1" placeholder="dk" id="free-min"><input class="wide" type="text" placeholder="not" id="free-note"><button class="btn sm" data-act="free">Kaydet</button></div>
+      </div>
+      <h2>Bugün kaydedilenler <span class="mono">${fmtHM(loggedMin(showDate))}</span></h2>
+      <p class="hint">Yanlış girdiysen burada düzelt: süre ve soru sayısı doğrudan değiştirilir, ✕ ile silinir; silinen öğe listeye geri döner. Tarih değiştirmek için Kayıtlar sekmesi.</p>
+      ${logHtml}
+    </section>
+    <aside class="col">
+      <div class="stat-grid">
+        <div class="stat"><div class="k">${t<s.startDate?'İlk gün':'Bugün'}</div><div class="v mono">${fmtHM(loggedMin(showDate))} <span class="dim">/ ${fmtHM(capacity(showDate))}</span></div></div>
+        <div class="stat"><div class="k">Sapma · dün kapanış</div><div class="v mono ${P.variance>=0?'up':'down'}">${P.variance>=0?'+':'−'}${fmtH(Math.abs(P.variance))}</div><div class="k">${fmtH(P.actualToDate)} / plan ${fmtH(P.plannedToDate)}</div></div>
+        <div class="stat"><div class="k">Öğrenme bitişi</div><div class="v mono ${P.slip>0?'down':'up'}">${P.learningEnd?fmtDate(P.learningEnd):'—'}</div><div class="k">${P.slip>0?`review'a ${P.slip} gün taşıyor`:P.slip<0?`${-P.slip} gün erken`:'tam zamanında'}</div></div>
+        <div class="stat"><div class="k">Review için kalan</div><div class="v mono ${P.reviewLeft<40*60?'down':''}">${fmtH(P.reviewLeft)}</div>${P.skipped.n?`<div class="k down">${P.skipped.n} gün atlandı · ${fmtH(P.skipped.min)} kotadan gitti</div>`:''}</div>
+      </div>
+      ${renderCurve()}
+      ${P.overflowMin>0?`<div class="note danger">Kuyruk sınav gününe sığmıyor: ${fmtH(P.overflowMin)} açıkta. Günlük saati artır, blackout azalt ya da Ayarlar'da Q-Bank kotasını düşür.</div>`:''}
+    </aside>
+  </div>`;
+}
+
+// ---------- KAYITLAR ----------
+function renderLog(el){
+  const s=S.settings;
+  const dates=new Set();
+  for(const id in S.items) for(const e of (S.items[id].log||[])) dates.add(e.d);
+  for(const e of S.free) dates.add(e.d);
+  const ds=[...dates].sort().reverse();
+  let totFree=0; for(const e of S.free) totFree+=Number(e.m)||0;
+  const days=ds.map(d=>{
+    let ents=dayEntries(d);
+    if(logFilter==='free') ents=ents.filter(x=>x.kind==='free');
+    else if(logFilter==='video') ents=ents.filter(x=>x.kind==='item'&&x.item&&x.item.type==='video');
+    else if(logFilter==='q') ents=ents.filter(x=>x.kind==='item'&&(!x.item||x.item.type!=='video'));
+    if(!ents.length) return '';
+    const kind=dayKind(d), cap=capacity(d), lg=loggedMin(d);
+    const kindTxt=kind==='rest'?'dinlenme':kind==='blackout'?'blackout':kind==='skip'?'atlandı':kind==='extra'?'ek gün':'';
+    return `<section class="logday"><div class="logday-h"><b>${fmtDate(d,true)}</b><span class="mono">${fmtHM(lg)}</span><span class="mono dim">/ ${fmtHM(cap)}${kindTxt?' · '+kindTxt:''}</span></div><div class="loglist">${ents.map(x=>entryRowHtml(x,{date:true})).join('')}</div></section>`;
+  }).join('');
+  const fb=(f,l)=>`<button class="btn sm ${logFilter===f?'on':''}" data-act="logf" data-f="${f}">${l}</button>`;
+  el.innerHTML=`<div class="bar"><h1>Kayıtlar</h1><span class="chips">${fb('all','Tümü')}${fb('free','Serbest çalışma')}${fb('video','Video')}${fb('q','Soru')}</span><span class="mono dim right">toplam ${fmtH(P.actual)} · serbest ${fmtH(totFree)}</span></div>
+  <p class="hint">Her satır yerinde düzenlenir: tarih, soru sayısı, süre, not. ✕ kaydı siler; silinen video/soru öğesi kuyruğa geri döner. Tarih değiştirirsen o günün toplamı ve sapma yeniden hesaplanır.</p>
+  ${days || '<div class="empty">Henüz kayıt yok.</div>'}`;
+}
+
+function renderCurve(){
+  const s=S.settings; const start=s.startDate, end=s.examDate; const n=diffDays(start,end);
+  const W=640,H=220,L=44,B=24,T=10,R=10;
+  let capCum=0, actCum=0; const plan=[], act=[]; const t=todayIso();
+  for(let i=0;i<=n;i++){ const d=addDays(start,i); capCum+=capacity(d); plan.push(capCum); if(d<=t){ actCum+=loggedMin(d); act.push(actCum);} }
+  const max=Math.max(capCum,1);
+  const x=i=>L+(W-L-R)*i/n, y=v=>T+(H-T-B)*(1-v/max);
+  const path=arr=>arr.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  // tahmin: bugünden sonra gerçek + kapasite
+  const fc=[]; let f=actCum; const startI=act.length-1; for(let i=Math.max(0,startI);i<=n;i++){ if(i>startI) f+=capacity(addDays(start,i)); fc.push([i,f]); }
+  const fpath=fc.map(([i,v],k)=>`${k?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const ri=diffDays(start,s.reviewStart); const ti=clamp(diffDays(start,t),0,n);
+  const yt=[0,0.25,0.5,0.75,1].map(p=>`<text x="${L-6}" y="${y(max*p)+4}" class="ax" text-anchor="end">${Math.round(max*p/60)}</text><line x1="${L}" x2="${W-R}" y1="${y(max*p)}" y2="${y(max*p)}" class="gl"/>`).join('');
+  const months=[]; for(let i=0;i<=n;i++){ const d=parseD(addDays(start,i)); if(d.getDate()===1||i===0) months.push(`<text x="${x(i)}" y="${H-6}" class="ax">${MONTHS_TR[d.getMonth()].slice(0,3)}</text>`); }
+  return `<div class="curve"><div class="curve-h"><span>Birikim eğrisi</span><span class="leg"><i class="l-plan"></i>plan <i class="l-act"></i>gerçek <i class="l-fc"></i>tahmin</span></div>
+  <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${yt}${months.join('')}
+   <line x1="${x(ri)}" x2="${x(ri)}" y1="${T}" y2="${H-B}" class="rv"/><text x="${x(ri)+4}" y="${T+10}" class="ax amber">review</text>
+   <path d="${path(plan)}" class="p-plan"/>
+   <path d="${fpath}" class="p-fc"/>
+   <path d="${path(act)}" class="p-act"/>
+   <line x1="${x(ti)}" x2="${x(ti)}" y1="${T}" y2="${H-B}" class="tl"/>
+  </svg></div>`;
+}
+
+// ---------- HAFTA ----------
+function weekStart(dateIso){ const d=parseD(dateIso); const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); return iso(d); }
+function renderWeek(el){
+  const s=S.settings; if(!weekAnchor) weekAnchor=weekStart(planFrom());
+  const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  const days=[...Array(7)].map((_,i)=>addDays(weekAnchor,i));
+  let capW=0, logW=0;
+  const cols=days.map(d=>{
+    const kind=dayKind(d), cap=capacity(d), lg=loggedMin(d); capW+=cap; logW+=lg;
+    const plan=P.dayPlan[d]||[];
+    // LM bazında grupla
+    const groups=[]; for(const e of plan){ const it=byId[e.id]; const key=`${it.topic}-${it.lm}`; let g=groups.find(x=>x.key===key); if(!g){g={key,topic:it.topic,lm:it.lm,name:it.lmName,vids:[],les:0,qb:0,min:0}; groups.push(g);} g.min+=e.min; if(it.type==='video') g.vids.push(it.label); else if(it.src==='les') g.les+=e.min; else g.qb+=e.min; }
+    const mock=S.mocks.find(m=>m.date===d);
+    const body= groups.length? groups.map(g=>`<div class="wg" style="border-left-color:${topicColor(g.topic)}"><div class="wg-t">${g.topic}${g.lm?' LM'+g.lm:''} <span class="mono dim">${fmtHM(g.min)}</span></div><div class="wg-n">${esc(g.name)}</div>${g.vids.length?`<div class="wg-l">▶ ${esc(g.vids.join(', '))}</div>`:''}${g.les?`<div class="wg-l">LES ~${Math.round(g.les/s.minPerQ)} soru</div>`:''}${g.qb?`<div class="wg-l">QB ~${Math.round(g.qb/s.minPerQ)} soru</div>`:''}</div>`).join('')
+      : (d>=s.reviewStart&&d<s.examDate ? `<div class="wg amber-l">Review${mock?`<br><b>${esc(mock.name)}</b>`:''}</div>` : kind==='exam'?'<div class="wg amber-l"><b>SINAV</b></div>':'');
+    const isT=d===todayIso();
+    return `<div class="wday k-${kind} ${isT?'today':''}" data-date="${d}"><div class="wd-h"><span>${DAYS_TR[parseD(d).getDay()]} <b>${parseD(d).getDate()}</b></span><span class="mono dim">${cap?fmtHM(cap):kind==='blackout'?'blackout':kind==='rest'?'dinlenme':kind==='skip'?'atlandı':''}</span></div>${body}${lg?`<div class="wd-f mono">✓ ${fmtHM(lg)}</div>`:''}</div>`;
+  }).join('');
+  el.innerHTML=`<div class="bar"><button class="btn sm" data-act="wk" data-n="-1">‹ önceki</button><h1>${fmtDate(days[0])} – ${fmtDate(days[6])} ${parseD(days[6]).getFullYear()}</h1><button class="btn sm" data-act="wk" data-n="1">sonraki ›</button><button class="btn sm ghost" data-act="wk" data-n="0">bu hafta</button><span class="mono dim right">plan ${fmtH(capW)} · gerçek ${fmtH(logW)}</span></div><div class="week">${cols}</div><p class="hint">Bir güne tıklayınca o günün kapasitesini değiştirebilirsin (0 = atla, dinlenme gününe saat = ek gün).</p>`;
+}
+
+// ---------- TAKVİM ----------
+function renderCalendar(el){
+  const s=S.settings; const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  const first=parseD(s.startDate); first.setDate(1); const last=parseD(s.examDate);
+  const months=[]; for(let d=new Date(first); d<=last; d.setMonth(d.getMonth()+1)) months.push(new Date(d));
+  const t=todayIso();
+  const html=months.map(m=>{
+    const y=m.getFullYear(), mo=m.getMonth(); const dim=new Date(y,mo+1,0).getDate(); const off=(new Date(y,mo,1).getDay()+6)%7;
+    let cells=''; for(let i=0;i<off;i++) cells+='<div class="cd empty"></div>';
+    for(let day=1;day<=dim;day++){
+      const d=`${y}-${pad(mo+1)}-${pad(day)}`; const kind=dayKind(d); const plan=P.dayPlan[d]||[];
+      const topics=[...new Set(plan.map(e=>byId[e.id].topic))];
+      const bg=topics.length?`background:linear-gradient(90deg,${topics.map((c,i)=>`${topicColor(c)}33 ${i*100/topics.length}%, ${topicColor(c)}33 ${(i+1)*100/topics.length}%`).join(',')})`:'';
+      const mock=S.mocks.find(x=>x.date===d); const lg=loggedMin(d);
+      const rev=d>=s.reviewStart&&d<s.examDate;
+      cells+=`<div class="cd k-${kind} ${rev?'rev':''} ${d===t?'today':''} ${d<t&&kind==='work'&&!lg?'missed':''}" data-date="${d}" style="${bg}" title="${d}"><span class="n">${day}</span>${mock?'<span class="mk">M</span>':''}${lg?`<span class="lg mono">${Math.round(lg/60*10)/10}</span>`:''}</div>`;
+    }
+    return `<div class="month"><div class="mh">${MONTHS_TR[mo]} ${y}</div><div class="mg"><div class="cd hd">Pzt</div><div class="cd hd">Sal</div><div class="cd hd">Çar</div><div class="cd hd">Per</div><div class="cd hd">Cum</div><div class="cd hd">Cmt</div><div class="cd hd">Paz</div>${cells}</div></div>`;
+  }).join('');
+  const legend=s.order.map(c=>`<span class="lg-i"><i style="background:${topicColor(c)}"></i>${TOPIC_BY[c].short}</span>`).join('');
+  el.innerHTML=`<div class="bar"><h1>Takvim</h1><span class="dim">Güne tıkla: kapasiteyi değiştir</span></div><div class="legend">${legend}<span class="lg-i"><i class="sw-bo"></i>blackout</span><span class="lg-i"><i class="sw-rest"></i>dinlenme</span><span class="lg-i"><i class="sw-rev"></i>review</span><span class="lg-i"><i class="sw-miss"></i>kaçırılan gün</span></div><div class="months">${html}</div>`;
+}
+
+// ---------- KONULAR ----------
+function renderTopics(el){
+  const s=S.settings; const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  const cards=s.order.map(code=>{
+    const t=TOPIC_BY[code]; const its=P.items.filter(i=>i.topic===code);
+    const tt=totals(its); const w=t.lms.reduce((a,l)=>a+l[2],0); const mmH=w*313.92/106.73;
+    const lastDay=its.map(i=>(P.itemDays[i.id]||[]).slice(-1)[0]).filter(x=>x&&x.date).map(x=>x.date).sort().pop();
+    const firstDay=its.map(i=>(P.itemDays[i.id]||[])[0]).filter(x=>x&&x.date).map(x=>x.date).sort()[0];
+    const pct=tt.est?Math.round(tt.done/tt.est*100):0;
+    const rows=t.lms.map(lm=>{
+      const [n,name]=lm; const vids=its.filter(i=>i.lm===n&&i.type==='video'); const vd=vids.filter(v=>doneCount(v.id)>0).length;
+      const les=byId[`${code}-${n}-les`], qb=byId[`${code}-${n}-qb`]; const acc=S.acc[`${code}-${n}`]||'';
+      const lmDays=its.filter(i=>i.lm===n).flatMap(i=>P.itemDays[i.id]||[]).filter(x=>x.date).map(x=>x.date).sort();
+      const when=lmDays.length?`${fmtDate(lmDays[0])}${lmDays[0]!==lmDays[lmDays.length-1]?'–'+fmtDate(lmDays[lmDays.length-1]):''}`:'✓';
+      return `<div class="lmrow"><span class="mono dim">LM${n}</span><span class="lmn">${esc(name)}</span><span class="mono">▶ ${vd}/${vids.length}</span><span class="mono">${les?`LES ${doneCount(les.id)}/${les.count}`:'<span class="dim">LES —</span>'}</span><span class="mono">${qb?`QB ${doneCount(qb.id)}/${qb.target}<span class="dim">/${qb.count}</span>`:'<span class="dim">QB —</span>'}</span><span class="mono dim">${when}</span><span><input class="mini mono" type="number" min="0" max="100" placeholder="%" value="${acc}" data-acc="${code}-${n}" title="LES doğruluk yüzdesi (review önceliği için)"></span></div>`;
+    }).join('');
+    return `<details class="tcard" style="--tc:${t.color}"><summary><span class="tc-name">${esc(t.name)}</span><span class="mono dim" title="Ayarlar'daki sınav ağırlığı (resmi 2027 aralığı %${t.examW[0]}–${t.examW[1]})">ağırlık %${fmtPct(s.examW[code])}</span><span class="mono">${fmtH(tt.done)} / ${fmtH(tt.est)}</span><span class="mono dim">MM planı ${fmtH(mmH*60)}</span><span class="mono dim">${firstDay?fmtDate(firstDay)+(lastDay?' – '+fmtDate(lastDay):''):'tamam'}</span><span class="pbar"><i style="width:${pct}%"></i></span></summary><div class="lmhead"><span></span><span>Learning module</span><span>Video</span><span>CFAI LES</span><span>MM Q-Bank</span><span>Plan</span><span>Doğruluk</span></div>${rows}</details>`;
+  }).join('');
+  el.innerHTML=`<div class="bar"><h1>Konular</h1><span class="dim">Sıra ve ağırlık Ayarlar'dan değiştirilir · Doğruluk sütunu review'da zayıf LM listesini besler</span></div>${cards}`;
+}
+
+// ---------- REVIEW ----------
+function renderReview(el){
+  const s=S.settings; const t=todayIso();
+  const revDays=[]; for(let d=s.reviewStart; d<s.examDate; d=addDays(d,1)) revDays.push(d);
+  const workDays=revDays.filter(d=>capacity(d)>0);
+  const mockMin=S.mocks.length*(270+180);
+  // zayıf LM
+  const weak=[]; for(const code of s.order){ const tt=TOPIC_BY[code]; for(const lm of tt.lms){ const a=S.acc[`${code}-${lm[0]}`]; if(a!==undefined&&a!==''){ const ew=s.examW[code]||8; weak.push({code,lm:lm[0],name:lm[1],acc:Number(a),score:ew*(100-Number(a))}); } } }
+  weak.sort((a,b)=>b.score-a.score);
+  const mocks=S.mocks.slice().sort((a,b)=>a.date<b.date?-1:1).map(m=>`<div class="mockrow"><input type="text" value="${esc(m.name)}" data-mock="${m.id}" data-f="name"><input type="date" value="${m.date}" data-mock="${m.id}" data-f="date" class="mono"><input class="mini mono" type="number" min="0" max="90" placeholder="S1" value="${m.s1}" data-mock="${m.id}" data-f="s1"><input class="mini mono" type="number" min="0" max="90" placeholder="S2" value="${m.s2}" data-mock="${m.id}" data-f="s2"><span class="mono ${m.s1!==''&&m.s2!==''?((Number(m.s1)+Number(m.s2))/180>=0.7?'up':'down'):'dim'}">${m.s1!==''&&m.s2!==''?`%${Math.round((Number(m.s1)+Number(m.s2))/1.8)}`:'—'}</span><span class="dim">${dayKind(m.date)==='blackout'||dayKind(m.date)==='rest'?'⚠ o gün kapasite 0':''}</span><button class="ghost" data-act="mock-del" data-id="${m.id}">✕</button></div>`).join('');
+  // günlük review planı (basit döngü)
+  const plan=revDays.map(d=>{
+    const cap=capacity(d); const mock=S.mocks.find(m=>m.date===d); const over=(P.dayPlan[d]||[]).reduce((a,e)=>a+e.min,0);
+    let what='';
+    if(mock) what=`<b>${esc(mock.name)}</b> — Session 1 + 2 (2×135 dk), akşam yanlışları işaretle`;
+    else if(over>0) what=`<span class="down">Öğrenme kuyruğu taşması ${fmtHM(over)}</span>${cap-over>0.5?` + ${fmtHM(cap-over)} review`:''}`;
+    else if(cap===0) what=`<span class="dim">${dayKind(d)==='blackout'?'blackout':'dinlenme'}</span>`;
+    else { const prevMock=S.mocks.filter(m=>m.date<d).sort((a,b)=>a.date<b.date?1:-1)[0]; const daysLeft=diffDays(d,s.examDate);
+      if(daysLeft<=2) what='Ethics tekrar + formül kağıdı, yeni konu yok, erken yat';
+      let analysisDay=null; if(prevMock){ for(let x=addDays(prevMock.date,1); x<s.examDate; x=addDays(x,1)) if(capacity(x)>0){ analysisDay=x; break; } }
+      if(prevMock&&analysisDay===d) what=`${esc(prevMock.name)} çözüm analizi: her yanlış için LOS'u bul, LES'te o modülden 10 soru`;
+      else what=weak.length?`Zayıf LM'ler: ${weak.slice(0,3).map(w=>`${w.code} LM${w.lm}`).join(', ')} + Ethics okuma`:`Konu tekrarı (Doğruluk girince burada zayıf LM'ler listelenir) + Ethics okuma`; }
+    const note=S.reviewNotes[d]||'';
+    return `<div class="rvrow ${d===t?'today':''}"><span class="mono">${fmtDateShort(d)}</span><span class="mono dim">${cap?fmtHM(cap):''}</span><span>${what}</span><input type="text" placeholder="kendi notun" value="${esc(note)}" data-rn="${d}"><span class="mono dim">${loggedMin(d)?'✓ '+fmtHM(loggedMin(d)):''}</span></div>`;
+  }).join('');
+  el.innerHTML=`<div class="bar"><h1>Review ve mock</h1></div>
+  <div class="grid2">
+    <section class="col">
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Review başlangıcı</div><div class="v"><input type="date" class="mono" id="rv-start" value="${s.reviewStart}"></div></div>
+        <div class="stat"><div class="k">Review çalışma günü</div><div class="v mono">${workDays.length} <span class="dim">/ ${revDays.length} takvim günü</span></div></div>
+        <div class="stat"><div class="k">Review kapasitesi</div><div class="v mono">${fmtH(P.capReview)}</div>${P.capUsedByOverflow>0?`<div class="k down">${fmtH(P.capUsedByOverflow)} öğrenme taşmasına gidiyor</div>`:''}</div>
+        <div class="stat"><div class="k">Mock'lara giden</div><div class="v mono">${fmtH(mockMin)}</div><div class="k">${S.mocks.length} mock × (4,5 sa sınav + 3 sa analiz)</div></div>
+      </div>
+      <h2>Mock sınavlar</h2>
+      <p class="hint">Mock = tam boy deneme: 2 oturum × 90 soru × 135 dk, gerçek sınavla aynı format. LES'te A, B ve Practice Pack 1–5 var (7 adet). Mock + analizi bir günlük kapasitenin 2,5 katı; mock günü 3 saatle bitmez, ertesi gün analiz gerekir. Skorları /90 olarak gir.</p>
+      <div class="mocks">${mocks}</div>
+      <button class="btn sm" data-act="mock-add">+ Mock ekle</button>
+    </section>
+    <aside class="col">
+      <h2>Zayıf LM'ler</h2>
+      <p class="hint">Konular sekmesinde LES doğruluk yüzdesi girdikçe burada sınav ağırlığı × hata oranına göre sıralanır.</p>
+      ${weak.length?`<div class="weak">${weak.slice(0,12).map(w=>`<div class="wk-i"><b style="color:${topicColor(w.code)}">${w.code} LM${w.lm}</b> ${esc(w.name)} <span class="mono ${w.acc<65?'down':''}">%${w.acc}</span></div>`).join('')}</div>`:'<div class="empty">Henüz doğruluk verisi yok.</div>'}
+    </aside>
+  </div>
+  <h2>Günlük review planı</h2>
+  <div class="rvlist">${plan}</div>`;
+}
+
+// ---------- AYARLAR ----------
+function renderSettings(el){
+  const s=S.settings;
+  const bo=s.blackouts.slice().sort((a,b)=>a.from<b.from?-1:1).map(b=>`<div class="borow"><input type="date" class="mono" value="${b.from}" data-bo="${b.id}" data-f="from"><span>→</span><input type="date" class="mono" value="${b.to}" data-bo="${b.id}" data-f="to"><input type="text" placeholder="etiket" value="${esc(b.label||'')}" data-bo="${b.id}" data-f="label"><span class="mono dim">${diffDays(b.from,b.to)+1} gün</span><button class="ghost" data-act="bo-del" data-id="${b.id}">✕</button></div>`).join('');
+  const order=s.order.map((c,i)=>`<div class="orow" style="border-left-color:${topicColor(c)}"><span class="mono dim">${i+1}</span><span>${esc(TOPIC_BY[c].name)}</span><button class="ghost" data-act="ord" data-c="${c}" data-n="-1" ${i===0?'disabled':''}>↑</button><button class="ghost" data-act="ord" data-c="${c}" data-n="1" ${i===s.order.length-1?'disabled':''}>↓</button><input class="mini mono" type="number" step="0.5" value="${s.examW[c]}" data-ew="${c}" title="Sınav ağırlığı % (review önceliği için)"><span class="mono dim" title="Resmi 2027 aralığı">%${TOPIC_BY[c].examW[0]}–${TOPIC_BY[c].examW[1]}</span></div>`).join('');
+  const rest=[1,2,3,4,5,6,0].map(d=>`<label class="chip"><input type="checkbox" data-rest="${d}" ${s.restDays.includes(d)?'checked':''}>${DAYS_TR[d]}</label>`).join('');
+  const ovr=Object.keys(S.overrides).sort().map(d=>`<span class="chip mono">${fmtDateShort(d)}: ${S.overrides[d]} sa <button class="ghost" data-act="ovr-clear" data-date="${d}">✕</button></span>`).join('')||'<span class="dim">yok</span>';
+  el.innerHTML=`<div class="bar"><h1>Ayarlar</h1><span class="dim">Her değişiklik planı anında yeniden hesaplar</span></div>
+  <div class="grid2">
+   <section class="col">
+    <h2>Takvim</h2>
+    <div class="form">
+      <label>Başlangıç <input type="date" class="mono" data-s="startDate" value="${s.startDate}"></label>
+      <label>Sınav günü <input type="date" class="mono" data-s="examDate" value="${s.examDate}"></label>
+      <label>Review başlangıcı <input type="date" class="mono" data-s="reviewStart" value="${s.reviewStart}"></label>
+      <label>Günlük saat <input type="number" class="mono" step="0.5" min="0.5" data-s="dailyHours" value="${s.dailyHours}"></label>
+    </div>
+    <div class="form-l">Dinlenme günleri <div class="chips">${rest}</div></div>
+    <h2>Blackout dönemleri</h2>
+    <div class="bolist">${bo}</div><button class="btn sm" data-act="bo-add">+ Dönem ekle</button>
+    <h2>Gün bazlı değişiklikler</h2>
+    <div class="chips">${ovr}</div>
+   </section>
+   <section class="col">
+    <h2>Tahmin parametreleri</h2>
+    <div class="form">
+      <label>Video çarpanı <input type="number" class="mono" step="0.05" min="1" data-s="videoFactor" value="${s.videoFactor}"><span class="dim">izleme × (durdurma, not)</span></label>
+      <label>Soru başına dk <input type="number" class="mono" step="0.25" min="0.5" data-s="minPerQ" value="${s.minPerQ}"><span class="dim">çözüm + çözümü okuma</span></label>
+      <label class="inline">Q-Bank kotası <select data-s="qbMode"><option value="auto" ${s.qbMode==='auto'?'selected':''}>otomatik (takvime sığdır)</option><option value="manual" ${s.qbMode==='manual'?'selected':''}>elle</option></select><input type="number" class="mono" min="0" max="100" data-s="qbQuota" value="${s.qbQuota}" ${s.qbMode==='manual'?'':'disabled'}><span class="dim">%</span></label>
+      <label class="chip-l"><input type="checkbox" data-s="prereq" ${s.prereq?'checked':''}> Prereq videoları ve soruları dahil et (Econ 9:21 + FSA 7:50 video, 606 soru)</label>
+    </div>
+    <div class="note quiet">Şu an: video ${fmtH(P.items.filter(i=>i.type==='video').reduce((a,i)=>a+i.est,0))} · LES ${P.tot.lesT} soru ${fmtH(P.tot.lesT*s.minPerQ)} · Q-Bank kota %${Math.round(P.quota*100)} → ${P.tot.qbT}/${P.tot.qbAll} soru ${fmtH(P.tot.qbT*s.minPerQ)} · toplam ${fmtH(P.tot.est)} / öğrenme kapasitesi ${fmtH(P.capLearn)}</div>
+    <h2>Konu sırası ve sınav ağırlığı</h2>
+    <p class="hint">Ağırlık kutusu Konular sekmesinde ve zayıf-LM sıralamasında kullanılır. Sağdaki gri değer CFA Institute'un 2027 resmi aralığı.</p>
+    <div class="olist">${order}</div>
+    <button class="btn sm" data-act="ew-reset">2027 resmi ağırlıklara döndür (aralık orta noktaları)</button>
+    <h2>Veri</h2>
+    <div class="chips"><button class="btn sm" data-act="export">JSON indir</button><label class="btn sm">JSON yükle <input type="file" accept="application/json" id="imp" hidden></label><button class="btn sm" data-act="copy">Panoya kopyala</button><button class="btn sm" data-act="paste">Panodan yükle</button><button class="btn sm danger" data-act="reset">Tüm ilerlemeyi sıfırla</button></div>
+    ${pasteOpen?`<div class="pastebox"><textarea id="paste-box" rows="5" placeholder="JSON'u buraya yapıştır"></textarea><div class="chips"><button class="btn sm" data-act="paste-apply">Yükle</button><button class="btn sm" data-act="paste-close">Vazgeç</button></div></div>`:''}
+    <p class="hint">İlerleme bu tarayıcıda saklanır; telefon ve bilgisayar birbirini görmez. Cihaz değiştirirken: bir cihazda <b>Panoya kopyala</b>, diğerinde <b>Panodan yükle</b> (ya da JSON indir / yükle). Yükleme mevcut veriyi tamamen değiştirir.</p>
+   </section>
+  </div>`;
+}
+
+// ===================== OLAYLAR =====================
+function logDate(){ return todayIso()<S.settings.startDate?S.settings.startDate:todayIso(); }
+function addLog(id, c, m){ S.items[id]=S.items[id]||{log:[]}; S.items[id].log.push({id:uid(), d:logDate(), c, m, ts:Date.now()}); }
+function applyImport(text){ const obj=JSON.parse(text); if(!obj||typeof obj!=='object'||!obj.settings) throw new Error('Bu bir planlayıcı yedeği değil'); S=mergeDefaults(obj); pasteOpen=false; render(); }
+document.addEventListener('click', e=>{
+  const b=e.target.closest('[data-act]'); const nav=e.target.closest('.nav button');
+  if(nav){ view=nav.dataset.v; render(); return; }
+  if(e.target.closest('.wday') && !b && view==='week'){ askCapacity(e.target.closest('.wday').dataset.date); return; }
+  if(e.target.closest('.cd[data-date]') && view==='calendar'){ askCapacity(e.target.closest('.cd').dataset.date); return; }
+  if(!b) return;
+  const a=b.dataset.act, id=b.dataset.id;
+  if(a==='qlog'){ const c=Number($(`[data-qc="${id}"]`).value), m=Number($(`[data-qm="${id}"]`).value); if(!c){ $(`[data-qc="${id}"]`).focus(); return; } addLog(id,c,m||Math.round(c*S.settings.minPerQ)); render(); }
+  else if(a==='free'){ const m=Number($('#free-min').value)||0, note=$('#free-note').value.trim(); if(!m&&!note){ $('#free-min').focus(); return; } S.free.push({id:uid(), d:logDate(), m, note, ts:Date.now()}); render(); }
+  else if(a==='le-del'){ const it=S.items[b.dataset.item]; if(it&&it.log&&confirm('Bu kaydı sil? Öğe kuyruğa geri döner.')){ it.log=it.log.filter(e=>e.id!==b.dataset.eid); render(); } }
+  else if(a==='fe-del'){ if(confirm('Serbest çalışma kaydını sil?')){ S.free=S.free.filter(e=>e.id!==b.dataset.eid); render(); } }
+  else if(a==='logf'){ logFilter=b.dataset.f; render(); }
+  else if(a==='skip-today'){ S.overrides[todayIso()]=0; render(); }
+  else if(a==='ovr-clear'){ delete S.overrides[b.dataset.date]; render(); }
+  else if(a==='ew-reset'){ S.settings.examW={...DEFAULTS().settings.examW}; render(); }
+  else if(a==='copy'){ const txt=JSON.stringify(S); const ok=()=>{ b.textContent='Kopyalandı ✓'; setTimeout(()=>{ b.textContent='Panoya kopyala'; },1500); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok).catch(()=>{ prompt('Kopyalanamadı — bu metni kendin kopyala:', txt); });
+    else prompt('Bu metni kopyala:', txt); }
+  else if(a==='paste'){ const open=()=>{ pasteOpen=true; render(); setTimeout(()=>{ const ta=$('#paste-box'); if(ta) ta.focus(); },0); };
+    if(navigator.clipboard&&navigator.clipboard.readText) navigator.clipboard.readText().then(txt=>{ if(!txt||!txt.trim()){ open(); return; } if(confirm('Panodaki yedek yüklenecek ve bu cihazdaki mevcut veri tamamen değişecek. Devam?')) { try{ applyImport(txt); }catch(err){ alert('Pano içeriği okunamadı: '+err.message); open(); } } }).catch(open);
+    else open(); }
+  else if(a==='paste-apply'){ const txt=($('#paste-box')||{}).value||''; if(!txt.trim()) return; if(!confirm('Yapıştırılan yedek yüklenecek ve mevcut veri tamamen değişecek. Devam?')) return; try{ applyImport(txt); }catch(err){ alert('Okunamadı: '+err.message); } }
+  else if(a==='paste-close'){ pasteOpen=false; render(); }
+  else if(a==='wk'){ const n=Number(b.dataset.n); weekAnchor = n===0 ? weekStart(planFrom()) : addDays(weekAnchor, n*7); render(); }
+  else if(a==='mock-add'){ S.mocks.push({id:uid(),name:'CFAI Mock',date:S.settings.reviewStart,s1:'',s2:''}); render(); }
+  else if(a==='mock-del'){ S.mocks=S.mocks.filter(m=>m.id!==id); render(); }
+  else if(a==='bo-add'){ S.settings.blackouts.push({id:uid(),from:todayIso(),to:todayIso(),label:''}); render(); }
+  else if(a==='bo-del'){ S.settings.blackouts=S.settings.blackouts.filter(x=>x.id!==id); render(); }
+  else if(a==='ord'){ const o=S.settings.order, i=o.indexOf(b.dataset.c), j=i+Number(b.dataset.n); if(j<0||j>=o.length) return; [o[i],o[j]]=[o[j],o[i]]; render(); }
+  else if(a==='export'){ const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}); const u=URL.createObjectURL(blob); const l=document.createElement('a'); l.href=u; l.download=`cfa-planner-${todayIso()}.json`; l.click(); URL.revokeObjectURL(u); }
+  else if(a==='reset'){ if(confirm('Tüm ilerleme ve ayarlar silinecek. Emin misin?')){ S=DEFAULTS(); render(); } }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.dataset.act==='vid'){ const id=t.dataset.id; if(t.checked){ const inp=$(`[data-min="${id}"]`); const it=P.items.find(i=>i.id===id); addLog(id,1,Number(inp&&inp.value)||Math.round(it.est)); } else { if(S.items[id]) S.items[id].log=[]; } render(); }
+  else if(t.dataset.s!==undefined){ const k=t.dataset.s; let v=t.type==='checkbox'?t.checked:t.value; if(t.type==='number') v=Number(v); S.settings[k]=v; if(k==='examDate'&&S.settings.reviewStart>=v) S.settings.reviewStart=addDays(v,-20); render(); }
+  else if(t.dataset.rest!==undefined){ const d=Number(t.dataset.rest); const r=S.settings.restDays; if(t.checked&&!r.includes(d)) r.push(d); if(!t.checked) S.settings.restDays=r.filter(x=>x!==d); render(); }
+  else if(t.dataset.bo){ const b=S.settings.blackouts.find(x=>x.id===t.dataset.bo); b[t.dataset.f]=t.value; if(b.to<b.from) b.to=b.from; render(); }
+  else if(t.dataset.mock){ const m=S.mocks.find(x=>x.id===t.dataset.mock); m[t.dataset.f]=t.value; render(); }
+  else if(t.dataset.acc!==undefined){ S.acc[t.dataset.acc]=t.value; save(); }
+  else if(t.dataset.ew!==undefined){ S.settings.examW[t.dataset.ew]=Number(t.value); render(); }
+  else if(t.dataset.rn!==undefined){ S.reviewNotes[t.dataset.rn]=t.value; save(); }
+  // kayıt düzenleme (Bugün paneli + Kayıtlar)
+  else if(t.dataset.lem!==undefined){ const e=findLog(t.dataset.lem, t.dataset.eid); if(e){ e.m=Math.max(0,Number(t.value)||0); render(); } }
+  else if(t.dataset.lec!==undefined){ const e=findLog(t.dataset.lec, t.dataset.eid); if(e){ e.c=Math.max(0,Number(t.value)||0); render(); } }
+  else if(t.dataset.led!==undefined){ const e=findLog(t.dataset.led, t.dataset.eid); if(e&&t.value){ e.d=t.value; render(); } }
+  else if(t.dataset.fem!==undefined){ const e=findFree(t.dataset.fem); if(e){ e.m=Math.max(0,Number(t.value)||0); render(); } }
+  else if(t.dataset.fen!==undefined){ const e=findFree(t.dataset.fen); if(e){ e.note=t.value; save(); } }
+  else if(t.dataset.fed!==undefined){ const e=findFree(t.dataset.fed); if(e&&t.value){ e.d=t.value; render(); } }
+  else if(t.id==='rv-start'){ S.settings.reviewStart=t.value; render(); }
+  else if(t.id==='imp'){ const f=t.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ applyImport(r.result); }catch(err){ alert('Dosya okunamadı: '+err.message); } }; r.readAsText(f); t.value=''; }
+});
+function askCapacity(date){
+  const cur=S.overrides[date]; const base=baseCapacity(date)/60;
+  const v=prompt(`${fmtDate(date,true)}\nVarsayılan kapasite: ${base} saat${cur!==undefined?` · şu an: ${cur} saat`:''}\n\nYeni kapasite (saat). 0 = o günü atla, boş = varsayılana dön:`, cur!==undefined?cur:'');
+  if(v===null) return;
+  if(v.trim()==='') delete S.overrides[date]; else S.overrides[date]=Number(v);
+  render();
+}
+// ===================== ARKA PLAN MUM GRAFİĞİ =====================
+function bgCandles(){
+  let seed=7; const rnd=()=>{ seed=(seed*9301+49297)%233280; return seed/233280; };
+  let p=50, out=''; const n=90, w=1600/n;
+  for(let i=0;i<n;i++){ const o=p, c=clamp(p+(rnd()-0.48)*8,10,95); const hi=Math.max(o,c)+rnd()*4, lo=Math.min(o,c)-rnd()*4; const x=i*w+w*0.5;
+    out+=`<line x1="${x}" x2="${x}" y1="${100-hi}" y2="${100-lo}" stroke="${c>=o?'#3DD68C':'#F0665C'}" stroke-width="0.6"/><rect x="${x-w*0.3}" y="${100-Math.max(o,c)}" width="${w*0.6}" height="${Math.max(0.6,Math.abs(c-o))}" fill="${c>=o?'#3DD68C':'#F0665C'}"/>`; p=c; }
+  $('#bg').innerHTML=`<svg viewBox="0 0 1600 100" preserveAspectRatio="none">${out}</svg>`;
+}
+bgCandles();
+render();
+</script>
+</body>
+</html>
