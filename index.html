@@ -118,6 +118,12 @@ input[type=date]{color-scheme:dark}
 .curve .p-fc{fill:none;stroke:var(--amber);stroke-width:1.5;stroke-dasharray:2 4}
 .curve .rv{stroke:var(--amber);stroke-width:1;opacity:.7}
 .curve .tl{stroke:var(--text);stroke-width:1;opacity:.5}
+/* kayma grafiği */
+.curve .p-zero{fill:none;stroke:var(--muted);stroke-width:1.5}
+.curve .p-late{fill:none;stroke:var(--down);stroke-width:2.2}
+.l-late{background:var(--down)}
+.curve-f{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.curve-f b{color:var(--text)}
 /* week */
 .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .bar h1{margin:0}.bar .right{margin-left:auto}
@@ -782,6 +788,7 @@ function renderToday(el){
         <div class="stat"><div class="k">Review için kalan</div><div class="v mono ${P.reviewLeft<40*60?'down':''}">${fmtH(P.reviewLeft)}</div>${P.skipped.n?`<div class="k down">${P.skipped.n} gün atlandı · ${fmtH(P.skipped.min)} kotadan gitti</div>`:''}</div>
       </div>
       ${renderCurve()}
+            ${renderSlip()}
       ${P.overflowMin>0?`<div class="note danger">Kuyruk sınav gününe sığmıyor: ${fmtH(P.overflowMin)} açıkta. Günlük saati artır, blackout azalt ya da Ayarlar'da Q-Bank kotasını düşür.</div>`:''}
     </aside>
   </div>`;
@@ -834,7 +841,56 @@ function renderCurve(){
    <line x1="${x(ti)}" x2="${x(ti)}" y1="${T}" y2="${H-B}" class="tl"/>
   </svg></div>`;
 }
-
+// ---------- KAYMA GRAFİĞİ ----------
+// Plan referansı = baseCapacity (günlük saat × çalışma günleri; blackout ve dinlenme hariç). Gün bazlı override'lar
+// ("bugünü atla", ek gün) plana DAHİL DEĞİL: onlar plandan sapmadır ve bu grafikte kayma olarak görünür.
+// kayma (çalışma günü) = (plana göre birikmesi gereken − gerçek birikim) / günlük kapasite   (+ geride, − ileride)
+const SLIP_WINDOW = 14; // "bu tempoyla" projeksiyonu son N günün temposunu kullanır
+function renderSlip(){
+  const s=S.settings, t=todayIso(), start=s.startDate, dayMin=s.dailyHours*60;
+  const lend=addDays(s.reviewStart,-1); // öğrenme fazının planlanan son günü (referans bitiş)
+  if(!dayMin || t<start) return '';
+  const n=diffDays(start,lend); if(n<=0) return '';
+  // geçmiş: her gün için kayma
+  let planCum=0, actCum=0; const pts=[];
+  for(let i=0;i<=n;i++){ const d=addDays(start,i); if(d>t) break; planCum+=baseCapacity(d); actCum+=loggedMin(d); pts.push([i,(planCum-actCum)/dayMin]); }
+  const ti=pts[pts.length-1][0], slipNow=pts[pts.length-1][1];
+  // tempo = gerçek / plan, son SLIP_WINDOW günde (en az 1 çalışma günü planı yoksa baştan beri)
+  const paceOver=(from)=>{ let p=0,a=0; for(let d=from; d<=t; d=addDays(d,1)){ p+=baseCapacity(d); a+=loggedMin(d); } return [p,a]; };
+  let [wp,wa]=paceOver(addDays(t,-(SLIP_WINDOW-1))>start?addDays(t,-(SLIP_WINDOW-1)):start);
+  if(wp<dayMin) [wp,wa]=paceOver(start);
+  const pace = wp>0 ? clamp(wa/wp, 0.1, 3) : 1;
+  // kalan plan (yarın → öğrenme sonu) bu tempoyla ne kadar uzar
+  let remPlan=0; for(let d=addDays(t,1); d<=lend; d=addDays(d,1)) remPlan+=baseCapacity(d);
+  const slipEnd = slipNow + (remPlan/dayMin)*(1/pace-1);
+  // çalışma günü cinsinden kaymayı takvim tarihine çevir (sınav sonrası için dinlenme günleri hariç her gün sayılır)
+  const isWork=d=> d<s.examDate ? baseCapacity(d)>0 : !s.restDays.includes(parseD(d).getDay());
+  const shift=(from,days)=>{ let d=from, k=0, guard=0; const step=days>=0?1:-1, target=Math.round(Math.abs(days)); while(k<target && guard++<800){ d=addDays(d,step); if(isWork(d)) k++; } return d; };
+  const finPace=shift(lend,slipEnd), finPlan=shift(lend,slipNow);
+  // çizim
+  const W=640,H=170,L=44,B=24,T=10,R=10;
+  // y aralığı geçmişe göre ölçeklenir; projeksiyon aşırıysa üst/alt kenarda kırpılır (sayı altta yazar)
+  const pv=pts.map(p=>p[1]); const pmin=Math.min(...pv), pmax=Math.max(...pv);
+  const hi=Math.ceil(Math.max(3, pmax+1, Math.min(slipEnd, pmax+8)));
+  const lo=Math.floor(Math.min(-3, pmin-1, Math.max(slipEnd, pmin-8)));
+  const clipped = slipEnd>hi || slipEnd<lo;
+  const x=i=>L+(W-L-R)*i/n, y=v=>T+(H-T-B)*(hi-clamp(v,lo,hi))/(hi-lo);
+  const stepT=[1,2,5,10,20,30][[1,2,5,10,20,30].findIndex(st=>(hi-lo)/st<=6)] || 30;
+  let grid=''; for(let v=Math.ceil(lo/stepT)*stepT; v<=hi; v+=stepT) grid+=`<text x="${L-6}" y="${y(v)+4}" class="ax" text-anchor="end">${v>0?'+':''}${v}</text><line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" class="gl"/>`;
+  const months=[]; for(let i=0;i<=n;i++){ const d=parseD(addDays(start,i)); if(d.getDate()===1||i===0) months.push(`<text x="${x(i)}" y="${H-6}" class="ax">${MONTHS_TR[d.getMonth()].slice(0,3)}</text>`); }
+  const path=pts.map(([i,v],k)=>`${k?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const fpath=`M${x(ti).toFixed(1)},${y(slipNow).toFixed(1)} L${x(n).toFixed(1)},${y(slipEnd).toFixed(1)}`;
+  const g=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1).replace('.',',');
+  const cls=slipNow>0?'p-late':'p-act', lcls=slipNow>0?'l-late':'l-act';
+  return `<div class="curve"><div class="curve-h"><span>Plana göre kayma <span class="dim">· referans ${fmtDate(lend)}</span></span><span class="leg"><i class="l-plan"></i>plan <i class="${lcls}"></i>gerçek <i class="l-fc"></i>bu tempoyla</span></div>
+  <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}${months.join('')}
+   <line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" class="p-zero"/><text x="${W-R-2}" y="${y(0)-4}" class="ax" text-anchor="end">plan</text>
+   <path d="${fpath}" class="p-fc"/>${clipped?`<text x="${W-R-2}" y="${slipEnd>hi?T+22:H-B-14}" class="ax amber" text-anchor="end">${slipEnd>hi?'↑':'↓'} ${g(slipEnd)}</text>`:''}
+   <path d="${path}" class="${cls}"/>
+   <line x1="${x(ti)}" x2="${x(ti)}" y1="${T}" y2="${H-B}" class="tl"/>
+  </svg>
+  <div class="curve-f">Bugün <b>${g(slipNow)} gün</b> ${slipNow>0?'geride':slipNow<0?'ileride':'plan üstünde'} · son ${SLIP_WINDOW} gün tempo <b>%${Math.round(pace*100)}</b> · bu tempoyla bitiş <b>${fmtDate(finPace)}</b> (${g(slipEnd)} gün) · plan temposuna dönersen <b>${fmtDate(finPlan)}</b> (${g(slipNow)} gün)</div></div>`;
+}
 // ---------- HAFTA ----------
 function weekStart(dateIso){ const d=parseD(dateIso); const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); return iso(d); }
 function renderWeek(el){
