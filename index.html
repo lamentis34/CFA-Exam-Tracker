@@ -78,6 +78,7 @@ input[type=date]{color-scheme:dark}
 .btn{font:inherit;cursor:pointer;background:var(--panel2);color:var(--text);border:1px solid var(--line2);border-radius:4px;padding:6px 12px}
 .btn:hover{border-color:var(--muted)}
 .btn.sm{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:default}.btn:disabled:hover{border-color:var(--line2)}
 .btn.danger{border-color:var(--down);color:var(--down)}
 .ghost{all:unset;cursor:pointer;color:var(--muted);padding:2px 6px;border-radius:4px;font-size:14px}
 .ghost:hover{color:var(--text);background:var(--panel2)}.ghost:disabled{opacity:.3;cursor:default}
@@ -124,6 +125,37 @@ input[type=date]{color-scheme:dark}
 .l-late{background:var(--down)}
 .curve-f{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
 .curve-f b{color:var(--text)}
+/* kronometre */
+.sw{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;margin:0 0 14px}
+.sw-l{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.sw-dot{width:8px;height:8px;border-radius:50%;background:var(--line2);flex:none}
+.sw-t{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;letter-spacing:.02em;line-height:1}
+.sw-m{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.sw-b{margin-left:auto;display:flex;gap:6px}
+.sw.on{border-color:var(--up)}.sw.on .sw-t{color:var(--up)}.sw.on .sw-dot{background:var(--up);animation:swp 1.2s ease-in-out infinite}
+.sw.paused .sw-t{color:var(--amber)}.sw.paused .sw-dot{background:var(--amber)}
+@keyframes swp{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.sw.on .sw-dot{animation:none}}
+/* toplam plan ilerlemesi */
+.prog{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:14px}
+.prog-h{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);margin-bottom:8px}
+.prog-h .mono{color:var(--text);font-size:13px}.prog-h b{font-size:16px}
+.prog-bar{display:flex;gap:2px;height:12px}
+.prog-seg{position:relative;height:100%;background:var(--ink);border-radius:2px;overflow:hidden;min-width:3px}
+.prog-seg i{position:absolute;left:0;top:0;bottom:0;display:block}
+.prog-f{font-size:11.5px;color:var(--muted);margin-top:7px;font-family:var(--mono)}
+/* MM Q-Bank sekmesi */
+.qbcard{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:var(--r);margin-bottom:10px}
+.qbcard summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:2fr 1fr 1.4fr 1fr 1fr;gap:10px;align-items:center;padding:12px 14px;font-size:13.5px}
+.qbcard summary::-webkit-details-marker{display:none}
+.qbrow{display:grid;grid-template-columns:44px 2.2fr 80px 1.3fr 64px auto 110px;gap:10px;align-items:center;padding:7px 14px;font-size:13px;border-top:1px solid var(--line)}
+.qbrow.skip{opacity:.45}
+.qbrow.cur{background:rgba(245,184,75,.06)}
+.qbrow .qlog{flex-wrap:nowrap}
+.qbrow .pbar{display:block;margin-top:4px;max-width:160px}
+.qbquick{background:var(--panel);border:1px solid var(--amber);border-radius:var(--r);margin-bottom:16px;--tc:var(--amber)}
+.qbquick .qb-h{padding:10px 14px 4px;font-size:13px;color:var(--muted)}
+.st-cur{color:var(--amber)}.st-done{color:var(--up)}
 /* week */
 .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .bar h1{margin:0}.bar .right{margin-left:auto}
@@ -220,6 +252,13 @@ input[type=date]{color-scheme:dark}
   .lgr .lgl{flex:1 1 calc(100% - 60px);white-space:normal}
   .lgr input.lg-d{order:9;flex-basis:100%;width:auto}
   .bar .chips{flex-basis:100%}
+  .sw-t{font-size:22px}
+  .sw-b{margin-left:0;flex-basis:100%}
+  .qbcard summary{grid-template-columns:1fr 1fr;font-size:12.5px}
+  .qbrow{grid-template-columns:auto 1fr auto;grid-template-areas:"tag name name" "st cnt min" "log log skip";gap:6px 8px}
+  .qbrow .q-tag{grid-area:tag}.qbrow .q-name{grid-area:name}.qbrow .q-st{grid-area:st}.qbrow .q-cnt{grid-area:cnt}.qbrow .q-min{grid-area:min}.qbrow .q-log{grid-area:log}.qbrow .q-skip{grid-area:skip;justify-self:end}
+  .qbrow .q-name{white-space:normal}
+  .qb-stats{grid-template-columns:1fr 1fr!important}
 }
 </style>
 </head>
@@ -233,6 +272,7 @@ input[type=date]{color-scheme:dark}
     <button data-v="week">Hafta</button>
     <button data-v="calendar">Takvim</button>
     <button data-v="topics">Konular</button>
+    <button data-v="qbank">MM Q-Bank</button>
     <button data-v="log">Kayıtlar</button>
     <button data-v="review">Review ve mock</button>
     <button data-v="settings">Ayarlar</button>
@@ -244,7 +284,7 @@ input[type=date]{color-scheme:dark}
 // Videolar: [etiket, süre "h:mm:ss" veya "mm:ss"]
 // les = CFAI LES toplam soru (Practice Pack dahil), pp = bunun Practice Pack kısmı, qb = MM Q-Bank soru
 // w = MM planner weighting, pg = CFAI sayfa
-
+ 
 const TOPICS = [
 {code:'QM', name:'Quantitative Methods', short:'Quant', color:'#2DD4BF', examW:[11,14], lms:[
  [1,'Returns of Financial Assets and Instruments',0.99,36,[['Overview','13:56'],['LOSa','47:15'],['LOSb','59:33'],['EOMQ','15:55']],34,7,27],
@@ -387,7 +427,7 @@ const TOPICS = [
  [10,'Application of the Code and Standards: Level I',1.36,42,[['Video','3:22:38']],0,0,0],
 ]},
 ];
-
+ 
 // Doğrulama hedefleri (kaynak ekran görüntülerinden)
 const CHECK = {
  video: {QM:'23:23:16',FI:'13:01:08',DE:'11:20:39',AL:'6:41:22',FS:'18:44:23',EQ:'14:02:12',PC:'13:48:12',EC:'9:08:09',CF:'8:58:45',ET:'10:41:24'},
@@ -400,7 +440,7 @@ const CHECK = {
  lmCount: 102, videoCount: 308-16,
 };
 if (typeof module!=='undefined') module.exports={TOPICS,CHECK};
-
+ 
 // ===================== YARDIMCILAR =====================
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -409,6 +449,7 @@ const pad = n => String(n).padStart(2,'0');
 const fmtHM = min => { min=Math.round(min); const h=Math.floor(min/60), m=min%60; return h ? `${h}s ${pad(m)}dk` : `${m}dk`; };
 const fmtH = min => (min/60).toFixed(1).replace('.',',') + ' sa';
 const fmtPct = v => String(Number(v)||0).replace('.',',');
+const fmtSigned = v => (v>=0?'+':'−')+Math.abs(v).toFixed(1).replace('.',',');
 const fmtClock = sec => { const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return h?`${h}:${pad(m)}:${pad(s)}`:`${m}:${pad(s)}`; };
 const DAYS_TR = ['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
 const DAYS_TR_LONG = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
@@ -423,7 +464,7 @@ const fmtDateShort = s => { const d=parseD(s); return `${DAYS_TR[d.getDay()]} ${
 const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => Math.random().toString(36).slice(2,9);
-
+ 
 // ===================== DURUM =====================
 const DEFAULTS = () => ({
   settings: {
@@ -437,11 +478,11 @@ const DEFAULTS = () => ({
       {id:uid(),from:'2027-01-20',to:'2027-01-22',label:''},
       {id:uid(),from:'2027-02-01',to:'2027-02-06',label:''},
     ],
-    videoFactor:1.25, minPerQ:2.5, prereq:false, qbMode:'auto', qbQuota:100,
+    videoFactor:1.25, minPerQ:2.5, prereq:false,
     order:['QM','FI','DE','AL','FS','EQ','PC','EC','CF','ET'],
     examW:{QM:12.5,FI:12.5,DE:7.5,AL:7.5,FS:12.5,EQ:12.5,PC:10,EC:7.5,CF:7.5,ET:12.5}, // 2027 resmi aralık orta noktaları
   },
-  overrides:{}, items:{}, free:[], acc:{},
+  overrides:{}, items:{}, free:[], acc:{}, qbSkip:{},
   mocks:[
     {id:uid(),name:'CFAI Mock A',date:'2027-01-30',s1:'',s2:''},
     {id:uid(),name:'CFAI Mock 1',date:'2027-02-13',s1:'',s2:''},
@@ -465,11 +506,13 @@ function migrate(o){
   for(const e of o.free){ if(!e.id) e.id=uid(); if(e.m===undefined||e.m===null||e.m==='') e.m=0; else e.m=Number(e.m)||0; }
   // v1: log kayıtlarında id yoktu -> düzenleme/silme için id ekle
   for(const id in (o.items||{})){ const it=o.items[id]; if(!it||!Array.isArray(it.log)) continue; for(const e of it.log) if(!e.id) e.id=uid(); }
+  // v3: MM Q-Bank opsiyonel — "çözmeyeceğim" işaretleri
+  if(!o.qbSkip||typeof o.qbSkip!=='object') o.qbSkip={};
   return o;
 }
 function mergeDefaults(obj){ const d=DEFAULTS(); const out={...d,...obj}; out.settings={...d.settings,...(obj.settings||{})}; return migrate(out); }
 let S = load();
-
+ 
 // ===================== TAKVİM KAPASİTESİ =====================
 function isBlackout(date){ return S.settings.blackouts.some(b => date>=b.from && date<=b.to); }
 function baseCapacity(date){
@@ -491,14 +534,20 @@ function dayKind(date){
   return 'work';
 }
 function sumCapacity(from,to){ let t=0; for(let d=from; d<=to; d=addDays(d,1)) t+=capacity(d); return t; }
-
+ 
 // ===================== İŞ KALEMLERİ =====================
 function itemLog(id){ return (S.items[id]&&S.items[id].log)||[]; }
 function doneCount(id){ return itemLog(id).reduce((a,e)=>a+(e.c||0),0); }
 function actualMin(id){ return itemLog(id).reduce((a,e)=>a+(e.m||0),0); }
 function topicByCode(c){ return TOPICS.find(t=>t.code===c); }
-
-// Kota hesaplanmadan ham liste
+ 
+// MM Q-Bank artık tamamen opsiyonel: kuyruğa, günlük plana, ilerlemeye ve saat hesaplarına girmez.
+// Bu tarihten ÖNCE kaydedilen QB süreleri o dönem planın parçasıydı; geçmiş sapma/kayma hesabında kalır.
+const QB_OFF_FROM = '2026-09-28';
+const isQbId = id => /-qb$/.test(id);
+const countsInPlan = (id, date) => !(isQbId(id) && date >= QB_OFF_FROM);
+ 
+// Plan kuyruğu: video + CFAI LES (+ açıksa prereq videoları). Q-Bank yok.
 function buildRaw(){
   const s=S.settings, out=[];
   for(const code of s.order){
@@ -506,15 +555,23 @@ function buildRaw(){
     if(s.prereq && t.prereq){
       t.prereq.forEach((p,i)=>{
         out.push({id:`${code}-pre${i+1}-v`,topic:code,lm:0,lmName:'Prereq',type:'video',tier:4,label:`Prereq ${i+1} – ${p[0]}`,sec:toS(p[1]),est:toS(p[1])/60*s.videoFactor});
-        if(p[2]>0) out.push({id:`${code}-pre${i+1}-qb`,topic:code,lm:0,lmName:'Prereq',type:'q',src:'qb',tier:4,label:`Prereq ${i+1} Q-Bank`,count:p[2],target:p[2]});
       });
     }
     for(const lm of t.lms){
-      const [n,name,w,pg,vids,les,pp,qb]=lm;
+      const [n,name,w,pg,vids,les,pp]=lm;
       vids.forEach((v,i)=>out.push({id:`${code}-${n}-v${i+1}`,topic:code,lm:n,lmName:name,type:'video',tier:1,label:v[0],sec:toS(v[1]),est:toS(v[1])/60*s.videoFactor}));
       if(les>0) out.push({id:`${code}-${n}-les`,topic:code,lm:n,lmName:name,type:'q',src:'les',tier:2,label:'CFAI LES soruları',count:les,pp,target:les});
-      if(qb>0) out.push({id:`${code}-${n}-qb`,topic:code,lm:n,lmName:name,type:'q',src:'qb',tier:3,label:'MM Q-Bank',count:qb,target:qb});
     }
+  }
+  return out;
+}
+// MM Q-Bank listesi (plan dışı, yalnızca MM Q-Bank sekmesi ve kayıtlar için)
+function qbList(){
+  const s=S.settings, out=[];
+  for(const code of s.order){
+    const t=topicByCode(code); if(!t) continue;
+    if(s.prereq && t.prereq) t.prereq.forEach((p,i)=>{ if(p[2]>0) out.push({id:`${code}-pre${i+1}-qb`,topic:code,lm:0,pre:i+1,lmName:p[0],type:'q',src:'qb',tier:3,label:'MM Q-Bank',count:p[2],target:p[2]}); });
+    for(const lm of t.lms){ const n=lm[0], qb=lm[7]; if(qb>0) out.push({id:`${code}-${n}-qb`,topic:code,lm:n,lmName:lm[1],type:'q',src:'qb',tier:3,label:'MM Q-Bank',count:qb,target:qb}); }
   }
   return out;
 }
@@ -522,35 +579,17 @@ function remainingMin(it){
   if(it.type==='video') return doneCount(it.id)>0 ? 0 : it.est;
   return Math.max(0, it.target-doneCount(it.id))*S.settings.minPerQ;
 }
-function fullMin(it){ return it.type==='video' ? it.est : it.count*S.settings.minPerQ; }
-
-// Kota: kalan sabit iş + Q-Bank kalanı review başlangıcına sığmalı
-function computeQuota(items, from){
-  const s=S.settings;
-  if(s.qbMode==='manual') return clamp(Number(s.qbQuota)||0,0,100)/100;
-  const cap=sumCapacity(from, addDays(s.reviewStart,-1));
-  let fixed=0, t3=0;
-  for(const it of items){ if(it.tier===3) t3+=Math.max(0,it.count-doneCount(it.id))*s.minPerQ; else fixed+=remainingMin(it); }
-  if(t3<=0) return 1;
-  return clamp((cap*0.99-fixed)/t3, 0, 1);
-}
-function buildItems(from){
-  const items=buildRaw();
-  const q=computeQuota(items, from);
-  for(const it of items) if(it.tier===3){ const d=doneCount(it.id); it.target=d+Math.floor((it.count-d)*q); }
-  return {items, quota:q};
-}
-
+ 
 // ===================== PROJEKSİYON =====================
 // Kuyruğu 'from' tarihinden itibaren kapasiteye döker
-function project(from, useProgress=true){
+function project(from){
   const s=S.settings;
-  const {items, quota}= useProgress ? buildItems(from) : (()=>{ const items=buildRaw(); const q=computeQuotaBaseline(items); for(const it of items) if(it.tier===3) it.target=Math.floor(it.count*q); return {items,quota:q}; })();
+  const items=buildRaw();
   const dayPlan={}, itemDays={};
   let date=from, capLeft=capacity(date), lastDate=null, overflowMin=0;
   const end=s.examDate;
   for(const it of items){
-    let rem = useProgress ? remainingMin(it) : (it.type==='video'?it.est:it.target*s.minPerQ);
+    let rem = remainingMin(it);
     if(rem<=0.01) continue;
     while(rem>0.01){
       while(capLeft<=0.01){ date=addDays(date,1); if(date>=end) break; capLeft=capacity(date); }
@@ -561,49 +600,52 @@ function project(from, useProgress=true){
       rem-=a; capLeft-=a; lastDate=date;
     }
   }
-  return {items, quota, dayPlan, itemDays, learningEnd:lastDate, overflowMin};
-}
-function computeQuotaBaseline(items){
-  const s=S.settings; if(s.qbMode==='manual') return clamp(Number(s.qbQuota)||0,0,100)/100;
-  const cap=sumCapacity(s.startDate, addDays(s.reviewStart,-1));
-  let fixed=0,t3=0; for(const it of items){ if(it.tier===3) t3+=it.count*s.minPerQ; else fixed+=fullMin(it); }
-  return t3<=0?1:clamp((cap*0.99-fixed)/t3,0,1);
+  return {items, dayPlan, itemDays, learningEnd:lastDate, overflowMin};
 }
 function planFrom(){ const t=todayIso(); return t<S.settings.startDate ? S.settings.startDate : t; }
-
+ 
 // Günlük gerçekleşen
 function freeMin(date){ let m=0; for(const e of S.free) if(e.d===date) m+=Number(e.m)||0; return m; }
 function loggedMin(date){
   let m=0;
-  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d===date) m+=e.m||0;
+  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d===date && countsInPlan(id,e.d)) m+=e.m||0;
   return m+freeMin(date);
 }
 // 'date' dahil o güne kadar biriken gerçek çalışma
 function actualUpTo(date){
   let m=0;
-  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d<=date) m+=e.m||0;
+  for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d<=date && countsInPlan(id,e.d)) m+=e.m||0;
   for(const e of S.free) if(e.d<=date) m+=Number(e.m)||0;
   return m;
 }
+// Plan içeriği (video + LES) — tahmini dakika bazında ilerleme
 function totals(items){
-  let est=0, done=0, vidT=0, vidD=0, lesT=0, lesD=0, qbT=0, qbD=0, qbAll=0;
+  let est=0, done=0, vidT=0, vidD=0, lesT=0, lesD=0;
   for(const it of items){
     if(it.type==='video'){ vidT++; if(doneCount(it.id)>0){vidD++; done+=it.est;} est+=it.est; }
     else { const d=doneCount(it.id); est+=it.target*S.settings.minPerQ; done+=Math.min(d,it.target)*S.settings.minPerQ;
-      if(it.src==='les'){lesT+=it.count; lesD+=d;} else if(it.tier===3){qbT+=it.target; qbD+=d; qbAll+=it.count;} }
+      if(it.src==='les'){lesT+=it.count; lesD+=Math.min(d,it.count);} }
   }
-  return {est,done,vidT,vidD,lesT,lesD,qbT,qbD,qbAll};
+  return {est,done,vidT,vidD,lesT,lesD};
 }
-function actualTotal(){ let m=0; for(const id in S.items) m+=actualMin(id); for(const e of S.free) m+=Number(e.m)||0; return m; }
+// MM Q-Bank (plan dışı) özet
+function qbStats(list){
+  let total=0, done=0, min=0;
+  for(const it of list){ total+=it.count; done+=doneCount(it.id); min+=actualMin(it.id); }
+  return {total,done,min};
+}
+function actualTotal(){ let m=0; for(const id in S.items) for(const e of (S.items[id].log||[])) if(countsInPlan(id,e.d)) m+=e.m||0; for(const e of S.free) m+=Number(e.m)||0; return m; }
 function isSkipOverride(date){ const o=S.overrides[date]; return o!==undefined && o!==null && o!=='' && Number(o)===0 && baseCapacity(date)>0; }
-
+ 
 // ===================== ANA HESAP =====================
 let P=null; // güncel projeksiyon
 function recompute(){
   const from=planFrom();
-  P=project(from,true);
+  P=project(from);
   P.from=from;
   P.tot=totals(P.items);
+  P.qb=qbList();
+  P.qbTot=qbStats(P.qb);
   P.actual=actualTotal();
   const s=S.settings;
   P.capLearn=sumCapacity(s.startDate, addDays(s.reviewStart,-1));
@@ -613,7 +655,6 @@ function recompute(){
   for(const d in P.dayPlan) if(d>=s.reviewStart) for(const e of P.dayPlan[d]) P.capUsedByOverflow+=e.min;
   P.reviewLeft=P.capReview-P.capUsedByOverflow;
   P.daysToExam=diffDays(todayIso(), s.examDate);
-  P.slip = P.learningEnd ? diffDays(addDays(s.reviewStart,-1), P.learningEnd) : 0; // + = geç
   // Sapma "dünkü kapanış" bazında: bugünün kapasitesi henüz plana sayılmaz, bugünün çalışması da sapmaya girmez
   const t=todayIso(), y=addDays(t,-1);
   P.plannedToDate = sumCapacity(s.startDate, y);   // y < startDate ise 0
@@ -623,23 +664,25 @@ function recompute(){
   // atlanan günler (override 0 olan normal çalışma günleri)
   P.skipped={n:0,min:0};
   for(let d=s.startDate; d<s.examDate; d=addDays(d,1)) if(isSkipOverride(d)){ P.skipped.n++; P.skipped.min+=baseCapacity(d); }
+  P.sl=computeSlip();
 }
-
+ 
 // ===================== UI =====================
-let view='today', weekAnchor=null, calCursor=null, logFilter='all', pasteOpen=false;
+let view='today', weekAnchor=null, calCursor=null, logFilter='all', pasteOpen=false, qbOpen=null;
 const TOPIC_BY={}; TOPICS.forEach(t=>TOPIC_BY[t.code]=t);
 function topicColor(code){ return TOPIC_BY[code]?TOPIC_BY[code].color:'#888'; }
 function tierName(t){ return {1:'Video',2:'LES',3:'Q-Bank',4:'Prereq'}[t]; }
-
+ 
 function render(){
   recompute();
   renderTicker();
   const el=$('#view');
-  ({today:renderToday, week:renderWeek, calendar:renderCalendar, topics:renderTopics, log:renderLog, review:renderReview, settings:renderSettings}[view])(el);
+  ({today:renderToday, week:renderWeek, calendar:renderCalendar, topics:renderTopics, qbank:renderQbank, log:renderLog, review:renderReview, settings:renderSettings}[view])(el);
+  swTick();
   $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
   save();
 }
-
+ 
 function renderTicker(){
   const s=S.settings;
   const vsign=v=>v>=0?'▲':'▼';
@@ -649,19 +692,21 @@ function renderTicker(){
     ['Biriken', fmtH(P.actual)],
     ['Plana göre · dün kapanış', fmtH(P.plannedToDate)],
     ['Sapma · dün kapanış', `${vsign(P.variance)} ${fmtH(Math.abs(P.variance))}`, P.variance>=0?'up':'down'],
+    ...(P.sl?[
+      ['Kayma', `${fmtSigned(P.sl.slipNow)} gün`, P.sl.slipNow>0?'down':'up'],
+      ['Tempo · son '+SLIP_WINDOW+' gün', `%${Math.round(P.sl.pace*100)}`, P.sl.pace>=1?'up':'down'],
+    ]:[]),
     ['Atlanan', `${P.skipped.n} gün · ${fmtH(P.skipped.min)}`, P.skipped.n?'down':''],
-    ['Öğrenme bitişi', P.learningEnd?fmtDate(P.learningEnd):'—', P.slip>0?'down':'up'],
+    ['Plan ilerlemesi', `%${fmtPct((P.tot.est?P.tot.done/P.tot.est*100:0).toFixed(1))}`],
     ['Review başlangıcı', fmtDate(s.reviewStart)],
-    ['Review için kalan', fmtH(P.reviewLeft), P.reviewLeft<40*60?'down':'up'],
-    ['Q-Bank kotası', `%${Math.round(P.quota*100)}`],
     ['Video', `${P.tot.vidD}/${P.tot.vidT}`],
     ['LES', `${P.tot.lesD}/${P.tot.lesT}`],
-    ['Q-Bank', `${P.tot.qbD}/${P.tot.qbT}`],
+    ['MM Q-Bank · opsiyonel', `${P.qbTot.done}/${P.qbTot.total}`],
   ];
   const html=items.map(([k,v,c])=>`<span class="tk"><span class="tk-k">${k}</span><span class="tk-v ${c||''}">${v}</span></span>`).join('');
   $('#ticker .track').innerHTML=html+html;
 }
-
+ 
 // ---------- BUGÜN ----------
 function itemRowHtml(it, planMin, opts={}){
   const t=TOPIC_BY[it.topic]; const dc=doneCount(it.id);
@@ -686,7 +731,7 @@ function itemRowHtml(it, planMin, opts={}){
     <div class="qmark ${it.src}">${it.src==='les'?'LES':'QB'}</div>
     <div class="rw-main">
       <div class="rw-t"><b style="color:${t.color}">${lmTag}</b> ${esc(it.lmName)}</div>
-      <div class="rw-s">${esc(it.label)} · ${today} · ${dc}/${it.target} çözüldü${it.tier===3&&it.target<it.count?` <span class="dim">(kota, toplam ${it.count})</span>`:''}${it.pp?` <span class="dim">· ${it.pp}'i Practice Pack</span>`:''}${when}</div>
+      <div class="rw-s">${esc(it.label)} · ${today} · ${dc}/${it.target} çözüldü${it.pp?` <span class="dim">· ${it.pp}'i Practice Pack</span>`:''}${when}</div>
     </div>
     <div class="qlog">
       <input class="mini mono" type="number" min="1" placeholder="soru" data-qc="${it.id}">
@@ -701,12 +746,13 @@ function queueNext(excludeIds, n){
   for(const it of P.items){ if(excludeIds.has(it.id)) continue; if(remainingMin(it)<=0.01) continue; out.push(it); if(out.length>=n) break; }
   return out;
 }
-
+ 
 // ---------- KAYIT SATIRLARI (Bugün paneli + Kayıtlar sekmesi ortak) ----------
 function findLog(itemId, eid){ const it=S.items[itemId]; return it&&it.log ? it.log.find(e=>e.id===eid) : null; }
 function findFree(eid){ return S.free.find(e=>e.id===eid); }
+function allById(){ const byId={}; P.items.forEach(i=>byId[i.id]=i); P.qb.forEach(i=>byId[i.id]=i); return byId; }
 function dayEntries(date){
-  const byId={}; P.items.forEach(i=>byId[i.id]=i);
+  const byId=allById();
   const out=[];
   for(const id in S.items) for(const e of (S.items[id].log||[])) if(e.d===date) out.push({kind:'item',id,item:byId[id]||null,e});
   for(const e of S.free) if(e.d===date) out.push({kind:'free',e});
@@ -728,9 +774,10 @@ function entryRowHtml(x, opts={}){
   const t=TOPIC_BY[it.topic]; const lmTag=it.lm?`${it.topic} LM${it.lm}`:it.topic;
   const label=`<span class="lgl"><b style="color:${t.color}">${lmTag}</b> ${esc(it.lmName)} <span class="dim">· ${esc(it.label)}</span></span>`;
   if(it.type==='video') return `<div class="lgr"><span class="qmark vid">▶</span>${dateInp}${label}${minInp}${del}</div>`;
-  return `<div class="lgr"><span class="qmark ${it.src}">${it.src==='les'?'LES':'QB'}</span>${dateInp}${label}<span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.c||0}" data-lec="${x.id}" data-eid="${e.id}"><span class="dim">soru</span></span>${minInp}${del}</div>`;
+  const off = it.src==='qb' && !countsInPlan(x.id, e.d) ? `<span class="dim" title="MM Q-Bank opsiyonel: bu süre plana ve sapmaya sayılmaz">plan dışı</span>` : '';
+  return `<div class="lgr"><span class="qmark ${it.src}">${it.src==='les'?'LES':'QB'}</span>${dateInp}${label}${off}<span class="lg-m"><input class="mini mono" type="number" min="0" value="${e.c||0}" data-lec="${x.id}" data-eid="${e.id}"><span class="dim">soru</span></span>${minInp}${del}</div>`;
 }
-
+ 
 function renderToday(el){
   const t=todayIso(), s=S.settings;
   const cap=capacity(t), kind=dayKind(t);
@@ -742,33 +789,34 @@ function renderToday(el){
   else if(kind==='blackout') head=`<div class="note">Bugün blackout günü olarak işaretli. Çalışabilirsen <b>Sırada</b> listesinden kaydet.</div>`;
   else if(kind==='skip') head=`<div class="note">Bugünü atladın (0 saat). <button class="btn sm" data-act="ovr-clear" data-date="${t}">Geri al</button></div>`;
   else head=`<div class="note quiet">Kapasite ${fmtHM(cap)}${kind==='extra'?' (ek gün)':''}. Çalışamayacaksan: <button class="btn sm" data-act="skip-today">Bugünü atla</button></div>`;
-
+ 
   const showDate = t<s.startDate ? s.startDate : t;
   const list=(t<s.startDate ? (P.dayPlan[s.startDate]||[]) : plan);
   const rows=list.map(e=>itemRowHtml(byId[e.id], e.min, {part:e.part})).join('') || `<div class="empty">${t>=s.reviewStart?'Öğrenme kuyruğu bitti — review fazındasın. Review sekmesine bak.':cap>0?'Bugünün planı tamamlandı.':'Bugün için planlanmış öğe yok.'}</div>`;
-
+ 
   // sırada bekleyenler
   const planned=new Set(list.map(e=>e.id));
   const nxt=queueNext(planned, 8);
   const nextRows=nxt.map(it=>{ const fd=(P.itemDays[it.id]||[])[0]; return itemRowHtml(it, fd?fd.min:remainingMin(it), {next:true, date:fd?fd.date:null}); }).join('');
   const nextOpen = list.length===0 || cap===0;
   const nextHtml = nxt.length ? `<details class="nextbox" ${nextOpen?'open':''}><summary>Sırada <span class="dim">· kuyruğun sonraki ${nxt.length} öğesi, buradan da kaydedebilirsin</span></summary><div class="rows">${nextRows}</div></details>` : '';
-
+ 
   // review fazı bilgisi
   const inReview = t>=s.reviewStart && t<s.examDate;
   const mockToday=S.mocks.find(m=>m.date===t);
-
+ 
   // bugün kaydedilenler
   const ents=dayEntries(showDate);
   const logHtml = ents.length
     ? `<div class="loglist">${ents.map(x=>entryRowHtml(x)).join('')}</div>`
     : `<div class="empty quiet">Henüz kayıt yok.</div>`;
-
+ 
   el.innerHTML=`
   <div class="grid2">
     <section class="col">
       <h1>${fmtDate(showDate,true)}</h1>
       ${head}
+      ${swHtml()}
       ${inReview?`<div class="note amber">Review fazı. ${mockToday?`<b>Bugün ${esc(mockToday.name)}</b> günü.`:''} Bugünün review hedefi Review sekmesinde.</div>`:''}
       <div class="rows">${rows}</div>
       ${nextHtml}
@@ -784,16 +832,15 @@ function renderToday(el){
       <div class="stat-grid">
         <div class="stat"><div class="k">${t<s.startDate?'İlk gün':'Bugün'}</div><div class="v mono">${fmtHM(loggedMin(showDate))} <span class="dim">/ ${fmtHM(capacity(showDate))}</span></div></div>
         <div class="stat"><div class="k">Sapma · dün kapanış</div><div class="v mono ${P.variance>=0?'up':'down'}">${P.variance>=0?'+':'−'}${fmtH(Math.abs(P.variance))}</div><div class="k">${fmtH(P.actualToDate)} / plan ${fmtH(P.plannedToDate)}</div></div>
-        <div class="stat"><div class="k">Öğrenme bitişi</div><div class="v mono ${P.slip>0?'down':'up'}">${P.learningEnd?fmtDate(P.learningEnd):'—'}</div><div class="k">${P.slip>0?`review'a ${P.slip} gün taşıyor`:P.slip<0?`${-P.slip} gün erken`:'tam zamanında'}</div></div>
-        <div class="stat"><div class="k">Review için kalan</div><div class="v mono ${P.reviewLeft<40*60?'down':''}">${fmtH(P.reviewLeft)}</div>${P.skipped.n?`<div class="k down">${P.skipped.n} gün atlandı · ${fmtH(P.skipped.min)} kotadan gitti</div>`:''}</div>
+        ${slipStatsHtml()}
       </div>
-      ${renderCurve()}
-            ${renderSlip()}
+      ${progressHtml()}
+      ${renderSlip()}
       ${P.overflowMin>0?`<div class="note danger">Kuyruk sınav gününe sığmıyor: ${fmtH(P.overflowMin)} açıkta. Günlük saati artır, blackout azalt ya da Ayarlar'da Q-Bank kotasını düşür.</div>`:''}
     </aside>
   </div>`;
 }
-
+ 
 // ---------- KAYITLAR ----------
 function renderLog(el){
   const s=S.settings;
@@ -806,54 +853,33 @@ function renderLog(el){
     let ents=dayEntries(d);
     if(logFilter==='free') ents=ents.filter(x=>x.kind==='free');
     else if(logFilter==='video') ents=ents.filter(x=>x.kind==='item'&&x.item&&x.item.type==='video');
-    else if(logFilter==='q') ents=ents.filter(x=>x.kind==='item'&&(!x.item||x.item.type!=='video'));
+    else if(logFilter==='les') ents=ents.filter(x=>x.kind==='item'&&(!x.item||x.item.src==='les'));
+    else if(logFilter==='qb') ents=ents.filter(x=>x.kind==='item'&&x.item&&x.item.src==='qb');
     if(!ents.length) return '';
     const kind=dayKind(d), cap=capacity(d), lg=loggedMin(d);
     const kindTxt=kind==='rest'?'dinlenme':kind==='blackout'?'blackout':kind==='skip'?'atlandı':kind==='extra'?'ek gün':'';
     return `<section class="logday"><div class="logday-h"><b>${fmtDate(d,true)}</b><span class="mono">${fmtHM(lg)}</span><span class="mono dim">/ ${fmtHM(cap)}${kindTxt?' · '+kindTxt:''}</span></div><div class="loglist">${ents.map(x=>entryRowHtml(x,{date:true})).join('')}</div></section>`;
   }).join('');
   const fb=(f,l)=>`<button class="btn sm ${logFilter===f?'on':''}" data-act="logf" data-f="${f}">${l}</button>`;
-  el.innerHTML=`<div class="bar"><h1>Kayıtlar</h1><span class="chips">${fb('all','Tümü')}${fb('free','Serbest çalışma')}${fb('video','Video')}${fb('q','Soru')}</span><span class="mono dim right">toplam ${fmtH(P.actual)} · serbest ${fmtH(totFree)}</span></div>
+  el.innerHTML=`<div class="bar"><h1>Kayıtlar</h1><span class="chips">${fb('all','Tümü')}${fb('free','Serbest çalışma')}${fb('video','Video')}${fb('les','CFAI LES')}${fb('qb','MM Q-Bank')}</span><span class="mono dim right">toplam ${fmtH(P.actual)} · serbest ${fmtH(totFree)}</span></div>
   <p class="hint">Her satır yerinde düzenlenir: tarih, soru sayısı, süre, not. ✕ kaydı siler; silinen video/soru öğesi kuyruğa geri döner. Tarih değiştirirsen o günün toplamı ve sapma yeniden hesaplanır.</p>
   ${days || '<div class="empty">Henüz kayıt yok.</div>'}`;
 }
-
-function renderCurve(){
-  const s=S.settings; const start=s.startDate, end=s.examDate; const n=diffDays(start,end);
-  const W=640,H=220,L=44,B=24,T=10,R=10;
-  let capCum=0, actCum=0; const plan=[], act=[]; const t=todayIso();
-  for(let i=0;i<=n;i++){ const d=addDays(start,i); capCum+=capacity(d); plan.push(capCum); if(d<=t){ actCum+=loggedMin(d); act.push(actCum);} }
-  const max=Math.max(capCum,1);
-  const x=i=>L+(W-L-R)*i/n, y=v=>T+(H-T-B)*(1-v/max);
-  const path=arr=>arr.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
-  // tahmin: bugünden sonra gerçek + kapasite
-  const fc=[]; let f=actCum; const startI=act.length-1; for(let i=Math.max(0,startI);i<=n;i++){ if(i>startI) f+=capacity(addDays(start,i)); fc.push([i,f]); }
-  const fpath=fc.map(([i,v],k)=>`${k?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
-  const ri=diffDays(start,s.reviewStart); const ti=clamp(diffDays(start,t),0,n);
-  const yt=[0,0.25,0.5,0.75,1].map(p=>`<text x="${L-6}" y="${y(max*p)+4}" class="ax" text-anchor="end">${Math.round(max*p/60)}</text><line x1="${L}" x2="${W-R}" y1="${y(max*p)}" y2="${y(max*p)}" class="gl"/>`).join('');
-  const months=[]; for(let i=0;i<=n;i++){ const d=parseD(addDays(start,i)); if(d.getDate()===1||i===0) months.push(`<text x="${x(i)}" y="${H-6}" class="ax">${MONTHS_TR[d.getMonth()].slice(0,3)}</text>`); }
-  return `<div class="curve"><div class="curve-h"><span>Birikim eğrisi</span><span class="leg"><i class="l-plan"></i>plan <i class="l-act"></i>gerçek <i class="l-fc"></i>tahmin</span></div>
-  <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${yt}${months.join('')}
-   <line x1="${x(ri)}" x2="${x(ri)}" y1="${T}" y2="${H-B}" class="rv"/><text x="${x(ri)+4}" y="${T+10}" class="ax amber">review</text>
-   <path d="${path(plan)}" class="p-plan"/>
-   <path d="${fpath}" class="p-fc"/>
-   <path d="${path(act)}" class="p-act"/>
-   <line x1="${x(ti)}" x2="${x(ti)}" y1="${T}" y2="${H-B}" class="tl"/>
-  </svg></div>`;
-}
+ 
 // ---------- KAYMA GRAFİĞİ ----------
 // Plan referansı = baseCapacity (günlük saat × çalışma günleri; blackout ve dinlenme hariç). Gün bazlı override'lar
 // ("bugünü atla", ek gün) plana DAHİL DEĞİL: onlar plandan sapmadır ve bu grafikte kayma olarak görünür.
 // kayma (çalışma günü) = (plana göre birikmesi gereken − gerçek birikim) / günlük kapasite   (+ geride, − ileride)
 const SLIP_WINDOW = 14; // "bu tempoyla" projeksiyonu son N günün temposunu kullanır
-function renderSlip(){
+function computeSlip(){
   const s=S.settings, t=todayIso(), start=s.startDate, dayMin=s.dailyHours*60;
   const lend=addDays(s.reviewStart,-1); // öğrenme fazının planlanan son günü (referans bitiş)
-  if(!dayMin || t<start) return '';
-  const n=diffDays(start,lend); if(n<=0) return '';
+  if(!dayMin || t<start) return null;
+  const n=diffDays(start,lend); if(n<=0) return null;
   // geçmiş: her gün için kayma
   let planCum=0, actCum=0; const pts=[];
   for(let i=0;i<=n;i++){ const d=addDays(start,i); if(d>t) break; planCum+=baseCapacity(d); actCum+=loggedMin(d); pts.push([i,(planCum-actCum)/dayMin]); }
+  if(!pts.length) return null;
   const ti=pts[pts.length-1][0], slipNow=pts[pts.length-1][1];
   // tempo = gerçek / plan, son SLIP_WINDOW günde (en az 1 çalışma günü planı yoksa baştan beri)
   const paceOver=(from)=>{ let p=0,a=0; for(let d=from; d<=t; d=addDays(d,1)){ p+=baseCapacity(d); a+=loggedMin(d); } return [p,a]; };
@@ -867,29 +893,57 @@ function renderSlip(){
   const isWork=d=> d<s.examDate ? baseCapacity(d)>0 : !s.restDays.includes(parseD(d).getDay());
   const shift=(from,days)=>{ let d=from, k=0, guard=0; const step=days>=0?1:-1, target=Math.round(Math.abs(days)); while(k<target && guard++<800){ d=addDays(d,step); if(isWork(d)) k++; } return d; };
   const finPace=shift(lend,slipEnd), finPlan=shift(lend,slipNow);
+  return {n, lend, pts, ti, slipNow, pace, wp, wa, slipEnd, finPace, finPlan};
+}
+// Kayma grafiğinin özetini panel olarak gösterir (eskiden grafiğin altındaki satırdı)
+function slipStatsHtml(){
+  const L=P.sl; if(!L) return '';
+  const st=(k,v,cls,sub)=>`<div class="stat"><div class="k">${k}</div><div class="v mono ${cls}">${v}</div><div class="k">${sub}</div></div>`;
+  return st('Kayma · bugün', `${fmtSigned(L.slipNow)} gün`, L.slipNow>0.05?'down':'up',
+            `${L.slipNow>0.05?'geride':L.slipNow<-0.05?'ileride':'plan üstünde'} · referans ${fmtDate(L.lend)}`)
+       + st(`Tempo · son ${SLIP_WINDOW} gün`, `%${Math.round(L.pace*100)}`, L.pace>=1?'up':'down',
+            `${fmtH(L.wa)} / plan ${fmtH(L.wp)}`)
+       + st('Bu tempoyla bitiş', fmtDate(L.finPace), L.slipEnd>0.05?'down':'up', `${fmtSigned(L.slipEnd)} gün`)
+       + st('Plan temposuna dönersen', fmtDate(L.finPlan), L.slipNow>0.05?'down':'up', `${fmtSigned(L.slipNow)} gün`);
+}
+// Toplam plan (video + CFAI LES) ilerlemesi: konu başına segment, dolgu = tamamlanan tahmini süre
+function progressHtml(){
+  const s=S.settings, tot=P.tot; if(!tot.est) return '';
+  const pct=tot.done/tot.est*100;
+  const segs=s.order.map(code=>{
+    const its=P.items.filter(i=>i.topic===code); const tt=totals(its); if(!tt.est) return '';
+    const w=tt.est/tot.est*100, f=tt.done/tt.est*100;
+    return `<span class="prog-seg" style="flex:${w.toFixed(3)} 1 0" title="${esc(TOPIC_BY[code].name)} · %${Math.round(f)} · ${fmtH(tt.done)} / ${fmtH(tt.est)}"><i style="width:${f.toFixed(2)}%;background:${topicColor(code)}"></i></span>`;
+  }).join('');
+  return `<div class="prog"><div class="prog-h"><span>Toplam plan</span><span class="mono"><b>%${fmtPct(pct.toFixed(1))}</b> <span class="dim">· ${fmtH(tot.done)} / ${fmtH(tot.est)}</span></span></div>
+  <div class="prog-bar" role="img" aria-label="Toplam planın yüzde ${Math.round(pct)} kadarı tamamlandı">${segs}</div>
+  <div class="prog-f">Video ${tot.vidD}/${tot.vidT} · LES ${tot.lesD}/${tot.lesT} · tahmini süre bazında, MM Q-Bank hariç</div></div>`;
+}
+function renderSlip(){
+  const L=P.sl; if(!L) return '';
+  const {n, lend, pts, ti, slipNow, slipEnd}=L;
   // çizim
-  const W=640,H=170,L=44,B=24,T=10,R=10;
+  const W=640,H=170,Lm=44,B=24,T=10,R=10;
   // y aralığı geçmişe göre ölçeklenir; projeksiyon aşırıysa üst/alt kenarda kırpılır (sayı altta yazar)
   const pv=pts.map(p=>p[1]); const pmin=Math.min(...pv), pmax=Math.max(...pv);
   const hi=Math.ceil(Math.max(3, pmax+1, Math.min(slipEnd, pmax+8)));
   const lo=Math.floor(Math.min(-3, pmin-1, Math.max(slipEnd, pmin-8)));
   const clipped = slipEnd>hi || slipEnd<lo;
-  const x=i=>L+(W-L-R)*i/n, y=v=>T+(H-T-B)*(hi-clamp(v,lo,hi))/(hi-lo);
+  const x=i=>Lm+(W-Lm-R)*i/n, y=v=>T+(H-T-B)*(hi-clamp(v,lo,hi))/(hi-lo);
   const stepT=[1,2,5,10,20,30][[1,2,5,10,20,30].findIndex(st=>(hi-lo)/st<=6)] || 30;
-  let grid=''; for(let v=Math.ceil(lo/stepT)*stepT; v<=hi; v+=stepT) grid+=`<text x="${L-6}" y="${y(v)+4}" class="ax" text-anchor="end">${v>0?'+':''}${v}</text><line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" class="gl"/>`;
+  let grid=''; for(let v=Math.ceil(lo/stepT)*stepT; v<=hi; v+=stepT) grid+=`<text x="${Lm-6}" y="${y(v)+4}" class="ax" text-anchor="end">${v>0?'+':''}${v}</text><line x1="${Lm}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" class="gl"/>`;
+  const start=S.settings.startDate;
   const months=[]; for(let i=0;i<=n;i++){ const d=parseD(addDays(start,i)); if(d.getDate()===1||i===0) months.push(`<text x="${x(i)}" y="${H-6}" class="ax">${MONTHS_TR[d.getMonth()].slice(0,3)}</text>`); }
   const path=pts.map(([i,v],k)=>`${k?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const fpath=`M${x(ti).toFixed(1)},${y(slipNow).toFixed(1)} L${x(n).toFixed(1)},${y(slipEnd).toFixed(1)}`;
-  const g=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(1).replace('.',',');
   const cls=slipNow>0?'p-late':'p-act', lcls=slipNow>0?'l-late':'l-act';
   return `<div class="curve"><div class="curve-h"><span>Plana göre kayma <span class="dim">· referans ${fmtDate(lend)}</span></span><span class="leg"><i class="l-plan"></i>plan <i class="${lcls}"></i>gerçek <i class="l-fc"></i>bu tempoyla</span></div>
   <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}${months.join('')}
-   <line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" class="p-zero"/><text x="${W-R-2}" y="${y(0)-4}" class="ax" text-anchor="end">plan</text>
-   <path d="${fpath}" class="p-fc"/>${clipped?`<text x="${W-R-2}" y="${slipEnd>hi?T+22:H-B-14}" class="ax amber" text-anchor="end">${slipEnd>hi?'↑':'↓'} ${g(slipEnd)}</text>`:''}
+   <line x1="${Lm}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" class="p-zero"/><text x="${W-R-2}" y="${y(0)-4}" class="ax" text-anchor="end">plan</text>
+   <path d="${fpath}" class="p-fc"/>${clipped?`<text x="${W-R-2}" y="${slipEnd>hi?T+22:H-B-14}" class="ax amber" text-anchor="end">${slipEnd>hi?'↑':'↓'} ${fmtSigned(slipEnd)}</text>`:''}
    <path d="${path}" class="${cls}"/>
    <line x1="${x(ti)}" x2="${x(ti)}" y1="${T}" y2="${H-B}" class="tl"/>
-  </svg>
-  <div class="curve-f">Bugün <b>${g(slipNow)} gün</b> ${slipNow>0?'geride':slipNow<0?'ileride':'plan üstünde'} · son ${SLIP_WINDOW} gün tempo <b>%${Math.round(pace*100)}</b> · bu tempoyla bitiş <b>${fmtDate(finPace)}</b> (${g(slipEnd)} gün) · plan temposuna dönersen <b>${fmtDate(finPlan)}</b> (${g(slipNow)} gün)</div></div>`;
+  </svg></div>`;
 }
 // ---------- HAFTA ----------
 function weekStart(dateIso){ const d=parseD(dateIso); const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); return iso(d); }
@@ -911,7 +965,7 @@ function renderWeek(el){
   }).join('');
   el.innerHTML=`<div class="bar"><button class="btn sm" data-act="wk" data-n="-1">‹ önceki</button><h1>${fmtDate(days[0])} – ${fmtDate(days[6])} ${parseD(days[6]).getFullYear()}</h1><button class="btn sm" data-act="wk" data-n="1">sonraki ›</button><button class="btn sm ghost" data-act="wk" data-n="0">bu hafta</button><span class="mono dim right">plan ${fmtH(capW)} · gerçek ${fmtH(logW)}</span></div><div class="week">${cols}</div><p class="hint">Bir güne tıklayınca o günün kapasitesini değiştirebilirsin (0 = atla, dinlenme gününe saat = ek gün).</p>`;
 }
-
+ 
 // ---------- TAKVİM ----------
 function renderCalendar(el){
   const s=S.settings; const byId={}; P.items.forEach(i=>byId[i.id]=i);
@@ -934,7 +988,7 @@ function renderCalendar(el){
   const legend=s.order.map(c=>`<span class="lg-i"><i style="background:${topicColor(c)}"></i>${TOPIC_BY[c].short}</span>`).join('');
   el.innerHTML=`<div class="bar"><h1>Takvim</h1><span class="dim">Güne tıkla: kapasiteyi değiştir</span></div><div class="legend">${legend}<span class="lg-i"><i class="sw-bo"></i>blackout</span><span class="lg-i"><i class="sw-rest"></i>dinlenme</span><span class="lg-i"><i class="sw-rev"></i>review</span><span class="lg-i"><i class="sw-miss"></i>kaçırılan gün</span></div><div class="months">${html}</div>`;
 }
-
+ 
 // ---------- KONULAR ----------
 function renderTopics(el){
   const s=S.settings; const byId={}; P.items.forEach(i=>byId[i.id]=i);
@@ -946,16 +1000,75 @@ function renderTopics(el){
     const pct=tt.est?Math.round(tt.done/tt.est*100):0;
     const rows=t.lms.map(lm=>{
       const [n,name]=lm; const vids=its.filter(i=>i.lm===n&&i.type==='video'); const vd=vids.filter(v=>doneCount(v.id)>0).length;
-      const les=byId[`${code}-${n}-les`], qb=byId[`${code}-${n}-qb`]; const acc=S.acc[`${code}-${n}`]||'';
+      const les=byId[`${code}-${n}-les`], qb=P.qb.find(q=>q.id===`${code}-${n}-qb`); const acc=S.acc[`${code}-${n}`]||'';
       const lmDays=its.filter(i=>i.lm===n).flatMap(i=>P.itemDays[i.id]||[]).filter(x=>x.date).map(x=>x.date).sort();
       const when=lmDays.length?`${fmtDate(lmDays[0])}${lmDays[0]!==lmDays[lmDays.length-1]?'–'+fmtDate(lmDays[lmDays.length-1]):''}`:'✓';
-      return `<div class="lmrow"><span class="mono dim">LM${n}</span><span class="lmn">${esc(name)}</span><span class="mono">▶ ${vd}/${vids.length}</span><span class="mono">${les?`LES ${doneCount(les.id)}/${les.count}`:'<span class="dim">LES —</span>'}</span><span class="mono">${qb?`QB ${doneCount(qb.id)}/${qb.target}<span class="dim">/${qb.count}</span>`:'<span class="dim">QB —</span>'}</span><span class="mono dim">${when}</span><span><input class="mini mono" type="number" min="0" max="100" placeholder="%" value="${acc}" data-acc="${code}-${n}" title="LES doğruluk yüzdesi (review önceliği için)"></span></div>`;
+      return `<div class="lmrow"><span class="mono dim">LM${n}</span><span class="lmn">${esc(name)}</span><span class="mono">▶ ${vd}/${vids.length}</span><span class="mono">${les?`LES ${doneCount(les.id)}/${les.count}`:'<span class="dim">LES —</span>'}</span><span class="mono">${qb?`<span class="dim">QB ${doneCount(qb.id)}/${qb.count}${S.qbSkip[qb.id]?' · ✕':''}</span>`:'<span class="dim">QB —</span>'}</span><span class="mono dim">${when}</span><span><input class="mini mono" type="number" min="0" max="100" placeholder="%" value="${acc}" data-acc="${code}-${n}" title="LES doğruluk yüzdesi (review önceliği için)"></span></div>`;
     }).join('');
-    return `<details class="tcard" style="--tc:${t.color}"><summary><span class="tc-name">${esc(t.name)}</span><span class="mono dim" title="Ayarlar'daki sınav ağırlığı (resmi 2027 aralığı %${t.examW[0]}–${t.examW[1]})">ağırlık %${fmtPct(s.examW[code])}</span><span class="mono">${fmtH(tt.done)} / ${fmtH(tt.est)}</span><span class="mono dim">MM planı ${fmtH(mmH*60)}</span><span class="mono dim">${firstDay?fmtDate(firstDay)+(lastDay?' – '+fmtDate(lastDay):''):'tamam'}</span><span class="pbar"><i style="width:${pct}%"></i></span></summary><div class="lmhead"><span></span><span>Learning module</span><span>Video</span><span>CFAI LES</span><span>MM Q-Bank</span><span>Plan</span><span>Doğruluk</span></div>${rows}</details>`;
+    return `<details class="tcard" style="--tc:${t.color}"><summary><span class="tc-name">${esc(t.name)}</span><span class="mono dim" title="Ayarlar'daki sınav ağırlığı (resmi 2027 aralığı %${t.examW[0]}–${t.examW[1]})">ağırlık %${fmtPct(s.examW[code])}</span><span class="mono">${fmtH(tt.done)} / ${fmtH(tt.est)}</span><span class="mono dim">MM planı ${fmtH(mmH*60)}</span><span class="mono dim">${firstDay?fmtDate(firstDay)+(lastDay?' – '+fmtDate(lastDay):''):'tamam'}</span><span class="pbar"><i style="width:${pct}%"></i></span></summary><div class="lmhead"><span></span><span>Learning module</span><span>Video</span><span>CFAI LES</span><span>MM Q-Bank (ops.)</span><span>Plan</span><span>Doğruluk</span></div>${rows}</details>`;
   }).join('');
   el.innerHTML=`<div class="bar"><h1>Konular</h1><span class="dim">Sıra ve ağırlık Ayarlar'dan değiştirilir · Doğruluk sütunu review'da zayıf LM listesini besler</span></div>${cards}`;
 }
-
+ 
+// ---------- MM Q-BANK (opsiyonel, plan dışı) ----------
+function currentLmKey(){ const h=P.items.find(it=>it.lm && remainingMin(it)>0.01); return h?`${h.topic}-${h.lm}`:null; }
+function lmStudied(code,n){ const v=P.items.filter(i=>i.topic===code&&i.lm===n&&i.type==='video'); return v.length>0 && v.every(x=>doneCount(x.id)>0); }
+function qbStatus(it, curKey){
+  if(!it.lm) return 'pre';
+  const k=`${it.topic}-${it.lm}`;
+  return k===curKey ? 'cur' : lmStudied(it.topic,it.lm) ? 'done' : 'next';
+}
+function qbRowHtml(it, scope, curKey){
+  const key=`${scope}|${it.id}`, dc=doneCount(it.id), m=actualMin(it.id), skip=!!S.qbSkip[it.id], st=qbStatus(it,curKey);
+  const stTxt={pre:'<span class="dim">prereq</span>', cur:'<span class="st-cur">şu an</span>', done:'<span class="st-done">çalışıldı</span>', next:'<span class="dim">ileride</span>'}[st];
+  const tag=it.lm?`LM${it.lm}`:`P${it.pre}`;
+  const name = scope==='quick' ? `<b class="mono" style="color:${topicColor(it.topic)}">${it.topic}</b> ${esc(it.lmName)}` : esc(it.lmName);
+  const pct=Math.min(100, dc/it.count*100);
+  const inputs = skip ? `<span class="dim q-log">kalan sayısına girmiyor</span>`
+    : `<div class="qlog q-log"><input class="mini mono" type="number" min="1" placeholder="soru" data-qbc="${key}"><input class="mini mono" type="number" min="1" placeholder="dk" data-qbm="${key}"><button class="btn sm" data-act="qblog" data-id="${it.id}" data-key="${key}">Kaydet</button></div>`;
+  return `<div class="qbrow ${skip?'skip':''} ${st==='cur'&&scope!=='quick'?'cur':''}" style="--tc:${topicColor(it.topic)}">
+    <span class="mono dim q-tag">${tag}</span><span class="lmn q-name" title="${esc(it.lmName)}">${name}</span><span class="mono q-st" style="font-size:12px">${stTxt}</span>
+    <span class="q-cnt"><span class="mono">${dc}/${it.count}</span><span class="pbar"><i style="width:${pct.toFixed(1)}%"></i></span></span>
+    <span class="mono dim q-min">${m?fmtHM(m):'—'}</span>${inputs}
+    <button class="ghost q-skip" data-act="qb-skip" data-id="${it.id}" title="${skip?'Bu LM’nin MM sorularını yeniden listeye al':'Bu LM’nin MM sorularını çözmeyeceğim: kalan sayısından düş'}">${skip?'geri al':'çözmeyeceğim'}</button></div>`;
+}
+function renderQbank(el){
+  const s=S.settings, curKey=currentLmKey(), list=P.qb, tot=P.qbTot;
+  const curTopic=curKey?curKey.split('-')[0]:s.order[0];
+  if(!qbOpen) qbOpen=new Set([curTopic]);
+  // özet grupları
+  const g={work:{q:0,lm:0,d:0}, next:{q:0,lm:0}, skip:{q:0,lm:0}};
+  for(const it of list){
+    const left=Math.max(0,it.count-doneCount(it.id)), st=qbStatus(it,curKey);
+    if(S.qbSkip[it.id]){ g.skip.q+=left; g.skip.lm++; }
+    else if(st==='next'){ g.next.q+=left; g.next.lm++; }
+    else { g.work.q+=left; g.work.lm++; g.work.d+=doneCount(it.id); }
+  }
+  const st=(k,v,sub,cls='')=>`<div class="stat"><div class="k">${k}</div><div class="v mono ${cls}">${v}</div><div class="k">${sub}</div></div>`;
+  // hızlı kayıt: şu an çalışılan LM + bir önceki
+  const keys=s.order.flatMap(c=>TOPIC_BY[c].lms.map(l=>`${c}-${l[0]}`));
+  const ci=curKey?keys.indexOf(curKey):-1;
+  const quickKeys = ci>=0 ? [keys[ci-1], keys[ci]].filter(Boolean) : [];
+  const quick=quickKeys.map(k=>list.find(it=>`${it.topic}-${it.lm}`===k)).filter(Boolean);
+  const quickHtml = quick.length ? `<div class="qbquick"><div class="qb-h">Güncel LM'ler <span class="dim">· şu an çalıştığın ve bir önceki LM, hızlı kayıt</span></div>${quick.map(it=>qbRowHtml(it,'quick',curKey)).join('')}</div>` : '';
+  const cards=s.order.map(code=>{
+    const t=TOPIC_BY[code], its=list.filter(i=>i.topic===code); if(!its.length) return '';
+    const ts=qbStats(its); const left=its.filter(i=>!S.qbSkip[i.id]).reduce((a,i)=>a+Math.max(0,i.count-doneCount(i.id)),0);
+    const pct=ts.total?ts.done/ts.total*100:0;
+    return `<details class="qbcard" data-code="${code}" style="--tc:${t.color}" ${qbOpen.has(code)?'open':''}><summary><span class="tc-name">${esc(t.name)}</span><span class="mono">${ts.done}/${ts.total}</span><span class="pbar"><i style="width:${pct.toFixed(1)}%"></i></span><span class="mono dim">kalan ${left}</span><span class="mono dim">${ts.min?fmtH(ts.min):'—'}</span></summary>${its.map(it=>qbRowHtml(it,'list',curKey)).join('')}</details>`;
+  }).join('');
+  el.innerHTML=`<div class="bar"><h1>MM Q-Bank</h1><span class="dim">Opsiyonel · günlük plana, kuyruğa, ilerlemeye ve sapma/kayma hesabına girmez</span></div>
+  <div class="stat-grid qb-stats" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">
+    ${st('Çözülen', `${tot.done} <span class="dim">/ ${tot.total}</span>`, `%${fmtPct((tot.total?tot.done/tot.total*100:0).toFixed(1))} · ${fmtH(tot.min)} harcandı`)}
+    ${st("Çalıştığın LM'lerde kalan", `${g.work.q} soru`, `${g.work.lm} LM · ${g.work.d} çözüldü`)}
+    ${st("İlerideki LM'lerde", `${g.next.q} soru`, `${g.next.lm} LM`)}
+    ${st('Çözmeyeceğim', `${g.skip.q} soru`, `${g.skip.lm} LM işaretli`, 'dim')}
+  </div>
+  ${quickHtml}
+  <p class="hint">Soru sayısını ve süreyi girip Kaydet'e bas (süre boşsa soru × ${fmtPct(s.minPerQ)} dk yazılır). “Çözmeyeceğim” o LM'yi kalan sayısından düşer, geri alınabilir. ${fmtDate(QB_OFF_FROM)} öncesi QB süreleri o dönem planın parçası olduğu için geçmiş sapma hesabında kalır; bundan sonrası plan dışıdır. Yanlış kaydı Kayıtlar → MM Q-Bank filtresinden düzelt.</p>
+  ${cards}`;
+}
+ 
 // ---------- REVIEW ----------
 function renderReview(el){
   const s=S.settings; const t=todayIso();
@@ -1004,7 +1117,7 @@ function renderReview(el){
   <h2>Günlük review planı</h2>
   <div class="rvlist">${plan}</div>`;
 }
-
+ 
 // ---------- AYARLAR ----------
 function renderSettings(el){
   const s=S.settings;
@@ -1033,10 +1146,9 @@ function renderSettings(el){
     <div class="form">
       <label>Video çarpanı <input type="number" class="mono" step="0.05" min="1" data-s="videoFactor" value="${s.videoFactor}"><span class="dim">izleme × (durdurma, not)</span></label>
       <label>Soru başına dk <input type="number" class="mono" step="0.25" min="0.5" data-s="minPerQ" value="${s.minPerQ}"><span class="dim">çözüm + çözümü okuma</span></label>
-      <label class="inline">Q-Bank kotası <select data-s="qbMode"><option value="auto" ${s.qbMode==='auto'?'selected':''}>otomatik (takvime sığdır)</option><option value="manual" ${s.qbMode==='manual'?'selected':''}>elle</option></select><input type="number" class="mono" min="0" max="100" data-s="qbQuota" value="${s.qbQuota}" ${s.qbMode==='manual'?'':'disabled'}><span class="dim">%</span></label>
-      <label class="chip-l"><input type="checkbox" data-s="prereq" ${s.prereq?'checked':''}> Prereq videoları ve soruları dahil et (Econ 9:21 + FSA 7:50 video, 606 soru)</label>
+      <label class="chip-l"><input type="checkbox" data-s="prereq" ${s.prereq?'checked':''}> Prereq videolarını dahil et (Econ 9:21 + FSA 7:50 video; prereq Q-Bank soruları MM Q-Bank sekmesine eklenir)</label>
     </div>
-    <div class="note quiet">Şu an: video ${fmtH(P.items.filter(i=>i.type==='video').reduce((a,i)=>a+i.est,0))} · LES ${P.tot.lesT} soru ${fmtH(P.tot.lesT*s.minPerQ)} · Q-Bank kota %${Math.round(P.quota*100)} → ${P.tot.qbT}/${P.tot.qbAll} soru ${fmtH(P.tot.qbT*s.minPerQ)} · toplam ${fmtH(P.tot.est)} / öğrenme kapasitesi ${fmtH(P.capLearn)}</div>
+    <div class="note quiet">Plan: video ${fmtH(P.items.filter(i=>i.type==='video').reduce((a,i)=>a+i.est,0))} · LES ${P.tot.lesT} soru ${fmtH(P.tot.lesT*s.minPerQ)} · toplam ${fmtH(P.tot.est)} / öğrenme kapasitesi ${fmtH(P.capLearn)} · kuyruk bitişi ${P.learningEnd?fmtDate(P.learningEnd):'—'}. MM Q-Bank (${P.qbTot.total} soru) plan dışı.</div>
     <h2>Konu sırası ve sınav ağırlığı</h2>
     <p class="hint">Ağırlık kutusu Konular sekmesinde ve zayıf-LM sıralamasında kullanılır. Sağdaki gri değer CFA Institute'un 2027 resmi aralığı.</p>
     <div class="olist">${order}</div>
@@ -1048,7 +1160,32 @@ function renderSettings(el){
    </section>
   </div>`;
 }
-
+ 
+// ===================== KRONOMETRE =====================
+// Zaman damgası bazlı: sekme değişse, telefon kilitlense ya da sayfa yenilense de doğru sayar.
+// Plan verisinden ayrı saklanır (JSON yedeğine girmez).
+const SW_KEY='cfa-l1-stopwatch', BASE_TITLE=document.title;
+let SW=(()=>{ try{ const o=JSON.parse(localStorage.getItem(SW_KEY)||'null'); if(o&&typeof o.acc==='number') return {acc:o.acc, start:typeof o.start==='number'?o.start:null}; }catch(e){} return {acc:0,start:null}; })();
+function swSave(){ try{ localStorage.setItem(SW_KEY, JSON.stringify(SW)); }catch(e){} }
+function swMs(){ return Math.max(0, SW.acc + (SW.start ? Date.now()-SW.start : 0)); }
+function swClock(ms){ const t=Math.floor(ms/1000), h=Math.floor(t/3600), m=Math.floor(t%3600/60), sec=t%60; return `${h}:${pad(m)}:${pad(sec)}`; }
+function swState(){ return SW.start ? 'on' : (SW.acc>0 ? 'paused' : ''); }
+function swHtml(){
+  const st=swState(), ms=swMs();
+  const lbl = st==='on' ? 'Durdur' : st==='paused' ? 'Devam et' : 'Başlat';
+  return `<div class="sw ${st}" id="sw"><span class="sw-l"><span class="sw-dot"></span>Kronometre</span>
+    <span class="sw-t" id="sw-t">${swClock(ms)}</span><span class="sw-m" id="sw-m">≈ ${Math.round(ms/60000)} dk</span>
+    <span class="sw-b"><button class="btn sm ${st==='on'?'on':''}" data-act="sw-toggle">${lbl}</button><button class="btn sm" data-act="sw-reset" ${ms>0?'':'disabled'}>Sıfırla</button></span></div>`;
+}
+function swRedraw(){ const w=$('#sw'); if(w) w.outerHTML=swHtml(); swTick(); } // tam render yok: yazılmış dk alanları silinmesin
+function swTick(){
+  const ms=swMs(); const el=$('#sw-t'); if(el) el.textContent=swClock(ms);
+  const m=$('#sw-m'); if(m) m.textContent=`≈ ${Math.round(ms/60000)} dk`;
+  document.title = SW.start ? `⏱ ${swClock(ms)} · CFA` : BASE_TITLE;
+}
+setInterval(swTick, 1000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) swTick(); });
+ 
 // ===================== OLAYLAR =====================
 function logDate(){ return todayIso()<S.settings.startDate?S.settings.startDate:todayIso(); }
 function addLog(id, c, m){ S.items[id]=S.items[id]||{log:[]}; S.items[id].log.push({id:uid(), d:logDate(), c, m, ts:Date.now()}); }
@@ -1060,6 +1197,10 @@ document.addEventListener('click', e=>{
   if(e.target.closest('.cd[data-date]') && view==='calendar'){ askCapacity(e.target.closest('.cd').dataset.date); return; }
   if(!b) return;
   const a=b.dataset.act, id=b.dataset.id;
+  if(a==='sw-toggle'){ if(SW.start){ SW.acc+=Date.now()-SW.start; SW.start=null; } else SW.start=Date.now(); swSave(); swRedraw(); return; }
+  if(a==='sw-reset'){ SW={acc:0,start:null}; swSave(); swRedraw(); return; }
+  if(a==='qblog'){ const k=b.dataset.key; const ci=$(`[data-qbc="${k}"]`), mi=$(`[data-qbm="${k}"]`); const c=Number(ci&&ci.value), m=Number(mi&&mi.value); if(!c){ if(ci) ci.focus(); return; } addLog(id,c,m||Math.round(c*S.settings.minPerQ)); render(); return; }
+  if(a==='qb-skip'){ if(S.qbSkip[id]) delete S.qbSkip[id]; else S.qbSkip[id]=true; render(); return; }
   if(a==='qlog'){ const c=Number($(`[data-qc="${id}"]`).value), m=Number($(`[data-qm="${id}"]`).value); if(!c){ $(`[data-qc="${id}"]`).focus(); return; } addLog(id,c,m||Math.round(c*S.settings.minPerQ)); render(); }
   else if(a==='free'){ const m=Number($('#free-min').value)||0, note=$('#free-note').value.trim(); if(!m&&!note){ $('#free-min').focus(); return; } S.free.push({id:uid(), d:logDate(), m, note, ts:Date.now()}); render(); }
   else if(a==='le-del'){ const it=S.items[b.dataset.item]; if(it&&it.log&&confirm('Bu kaydı sil? Öğe kuyruğa geri döner.')){ it.log=it.log.filter(e=>e.id!==b.dataset.eid); render(); } }
@@ -1105,6 +1246,8 @@ document.addEventListener('change', e=>{
   else if(t.id==='rv-start'){ S.settings.reviewStart=t.value; render(); }
   else if(t.id==='imp'){ const f=t.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ applyImport(r.result); }catch(err){ alert('Dosya okunamadı: '+err.message); } }; r.readAsText(f); t.value=''; }
 });
+// MM Q-Bank sekmesinde açık konu kartları render sonrası da açık kalsın
+document.addEventListener('toggle', e=>{ const d=e.target; if(!d.classList||!d.classList.contains('qbcard')) return; if(d.open) qbOpen.add(d.dataset.code); else qbOpen.delete(d.dataset.code); }, true);
 function askCapacity(date){
   const cur=S.overrides[date]; const base=baseCapacity(date)/60;
   const v=prompt(`${fmtDate(date,true)}\nVarsayılan kapasite: ${base} saat${cur!==undefined?` · şu an: ${cur} saat`:''}\n\nYeni kapasite (saat). 0 = o günü atla, boş = varsayılana dön:`, cur!==undefined?cur:'');
@@ -1125,3 +1268,4 @@ render();
 </script>
 </body>
 </html>
+ 
