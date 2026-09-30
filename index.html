@@ -226,6 +226,86 @@ input[type=date]{color-scheme:dark}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;align-items:center}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:13px;color:var(--text)}
 .bolist{display:flex;flex-direction:column}
+/* hatalar (aralıklı tekrar) */
+.nav .nbadge{font-family:var(--mono);font-size:11px;background:var(--amber);color:var(--ink);border-radius:9px;padding:0 6px;margin-left:6px;font-weight:600}
+.nav .nbadge:empty{display:none}
+.errbox{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:var(--r);padding:9px 12px;margin:0 0 14px}
+.errbox>summary{cursor:pointer;list-style:none;font-size:14px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.errbox>summary::-webkit-details-marker{display:none}
+.errbox>summary::before{content:'▸';color:var(--muted)}.errbox[open]>summary::before{content:'▾'}
+.ecards{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.ecard{background:var(--ink);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:var(--r);padding:10px 12px}
+.ecard.c-r,.erow.c-r{border-left-color:var(--down)}.ecard.c-y,.erow.c-y{border-left-color:var(--amber)}.ecard.c-g,.erow.c-g{border-left-color:var(--up)}
+.ecard.is-done{background:transparent}
+.ec-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.ec-t{font-weight:600;font-size:14px}
+.ec-m{font-family:var(--mono);font-size:12px;color:var(--muted);display:inline-flex;gap:8px;align-items:center}
+.ec-ref{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:3px 0 9px;overflow-wrap:anywhere}
+.ec-ref b{font-weight:600}
+.ec-act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ec-tm{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;color:var(--up);min-width:44px}
+.ec-res{font-size:13px;margin:0 0 8px}
+.ec-ask{margin:0 0 10px;display:flex;flex-direction:column;gap:6px}
+.ec-ask textarea,.eform textarea{font:inherit;font-size:14px;color:var(--text);background:var(--ink);border:1px solid var(--line2);border-radius:4px;padding:6px 8px;resize:vertical;width:100%}
+.enote{border-left:3px solid var(--line2);background:var(--panel2);padding:8px 11px;font-size:13.5px;line-height:1.55;border-radius:0 4px 4px 0}
+.enote .k{font-size:11.5px;color:var(--muted);margin-top:7px}.enote .k:first-child{margin-top:0}
+.enote p{margin:1px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.ehist{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:7px;display:flex;gap:3px 12px;flex-wrap:wrap}
+.btn.ok{border-color:var(--up);color:var(--up)}.btn.no{border-color:var(--down);color:var(--down)}.btn.gs{border-color:var(--amber);color:var(--amber)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}.dots i{width:7px;height:7px;border-radius:50%;border:1px solid var(--line2);display:block}.dots i.f{background:var(--up);border-color:var(--up)}
+.cdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;flex:none}.cdot.c-r{background:var(--down)}.cdot.c-y{background:var(--amber)}.cdot.c-g{background:var(--up)}
+.badge{font-family:var(--mono);font-size:11px;font-weight:400;border:1px solid var(--line2);border-radius:3px;padding:0 5px;color:var(--muted);vertical-align:1px}
+.badge.warn{border-color:var(--amber);color:var(--amber)}
+.eform{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:18px}
+.eform.editing{border-color:var(--amber)}
+.ef-g{display:grid;grid-template-columns:1.1fr 1.6fr .8fr .6fr;gap:10px}
+.eform label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);min-width:0}
+.eform label.full{grid-column:1/-1}
+.eform label i{font-style:normal;opacity:.75}
+.eform select,.eform input{width:100%;min-width:0}
+.ef-f{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.eform .ef-f label.chip{flex-direction:row;align-items:center;gap:6px;cursor:pointer;color:var(--text);font-size:13px}
+.weak .wk-i b{white-space:nowrap}
+.weak .wk-i .lmn{flex:1;min-width:0}
+.ef-msg{font-size:13px;color:var(--down)}
+.ef-btns{margin-left:auto;display:flex;gap:6px}
+.efilter{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+.efilter select{max-width:170px}
+.elist{display:flex;flex-direction:column;gap:5px}
+.erow{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:4px}
+.erow>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto 96px;gap:12px;align-items:center;padding:8px 10px;font-size:13.5px}
+.erow>summary::-webkit-details-marker{display:none}
+.er-t b{font-weight:600}
+.er-s{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.er-d{font-family:var(--mono);font-size:12.5px;text-align:right}
+.er-b{padding:2px 10px 10px}
+.load{display:flex;align-items:flex-end;gap:3px;height:84px;padding-top:14px;position:relative}
+.load .lb{flex:1;background:var(--line2);border-radius:2px 2px 0 0;min-height:2px;position:relative}
+.load .lb.over{background:var(--amber)}.load .lb.t{outline:1px solid var(--text);outline-offset:1px}
+.load .lb span{position:absolute;top:-14px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.load-cap{position:absolute;left:0;right:0;border-top:1px dashed var(--muted);pointer-events:none}
+.load-x{display:flex;gap:3px;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}.load-x span{flex:1;text-align:center}
+.rsheet .rs-t{font-weight:600;font-size:14px;margin:16px 0 4px}
+.rs-lm{font-family:var(--mono);font-size:12px;color:var(--muted);margin:10px 0 4px}
+.rs-i{display:flex;align-items:baseline;font-size:13.5px;line-height:1.5;padding:3px 0 3px 10px;border-left:2px solid var(--line2);margin-bottom:3px}
+.rs-i b{font-weight:600;margin-right:6px;white-space:nowrap}
+.howto-b{font-size:13.5px;line-height:1.6;max-width:78ch}
+.howto-b p{margin:10px 0}
+@media (max-width:900px){
+  .ef-g{grid-template-columns:1fr 1fr}
+  .erow>summary{grid-template-columns:minmax(0,1fr) auto}
+  .erow>summary .dots{display:none}
+  .er-s{white-space:normal}
+}
+@media print{
+  body.print-rules{background:#fff}
+  body.print-rules #ticker,body.print-rules .nav,body.print-rules #bg{display:none}
+  body.print-rules #view>:not(#rulesheet){display:none}
+  body.print-rules #rulesheet{border:0;padding:0}
+  body.print-rules #rulesheet>summary,body.print-rules #rulesheet .chips{display:none}
+  body.print-rules *{color:#000!important;background:transparent!important}
+  body.print-rules .rs-i{border-left-color:#999;break-inside:avoid}
+}
 /* responsive */
 @media (max-width:900px){
   .grid2{grid-template-columns:1fr}
@@ -272,6 +352,7 @@ input[type=date]{color-scheme:dark}
     <button data-v="week">Hafta</button>
     <button data-v="calendar">Takvim</button>
     <button data-v="topics">Konular</button>
+    <button data-v="errors">Hatalar<span class="nbadge" id="nav-err"></span></button>
     <button data-v="qbank">MM Q-Bank</button>
     <button data-v="log">Kayıtlar</button>
     <button data-v="review">Review ve mock</button>
@@ -481,6 +562,7 @@ const DEFAULTS = () => ({
     videoFactor:1.25, minPerQ:2.5, prereq:false,
     order:['QM','FI','DE','AL','FS','EQ','PC','EC','CF','ET'],
     examW:{QM:12.5,FI:12.5,DE:7.5,AL:7.5,FS:12.5,EQ:12.5,PC:10,EC:7.5,CF:7.5,ET:12.5}, // 2027 resmi aralık orta noktaları
+    errBudget:20, // günlük hata tekrarı bütçesi (dk); öğrenme kuyruğundan düşülür
   },
   overrides:{}, items:{}, free:[], acc:{}, qbSkip:{},
   mocks:[
@@ -489,6 +571,7 @@ const DEFAULTS = () => ({
     {id:uid(),name:'CFAI Mock 2',date:'2027-02-20',s1:'',s2:''},
   ],
   reviewNotes:{},
+  errors:[],
 });
 const KEY='cfa-l1-planner-v1';
 let memStore=null;
@@ -508,6 +591,9 @@ function migrate(o){
   for(const id in (o.items||{})){ const it=o.items[id]; if(!it||!Array.isArray(it.log)) continue; for(const e of it.log) if(!e.id) e.id=uid(); }
   // v3: MM Q-Bank opsiyonel — "çözmeyeceğim" işaretleri
   if(!o.qbSkip||typeof o.qbSkip!=='object') o.qbSkip={};
+  // v4: hata tekrarı kayıtları
+  if(!Array.isArray(o.errors)) o.errors=[];
+  for(const e of o.errors){ if(!e.id) e.id=uid(); if(!Array.isArray(e.hist)) e.hist=[]; if(typeof e.stage!=='number') e.stage=0; }
   return o;
 }
 function mergeDefaults(obj){ const d=DEFAULTS(); const out={...d,...obj}; out.settings={...d.settings,...(obj.settings||{})}; return migrate(out); }
@@ -581,18 +667,20 @@ function remainingMin(it){
 }
  
 // ===================== PROJEKSİYON =====================
+// Öğrenme kuyruğuna kalan kapasite: review fazı öncesi her çalışma gününden hata tekrarı bütçesi düşülür
+function capPlan(d){ const c=capacity(d), r=Number(S.settings.errBudget)||0; if(c<=0||r<=0||d>=S.settings.reviewStart) return c; return Math.max(0,c-r); }
 // Kuyruğu 'from' tarihinden itibaren kapasiteye döker
 function project(from){
   const s=S.settings;
   const items=buildRaw();
   const dayPlan={}, itemDays={};
-  let date=from, capLeft=capacity(date), lastDate=null, overflowMin=0;
+  let date=from, capLeft=capPlan(date), lastDate=null, overflowMin=0;
   const end=s.examDate;
   for(const it of items){
     let rem = remainingMin(it);
     if(rem<=0.01) continue;
     while(rem>0.01){
-      while(capLeft<=0.01){ date=addDays(date,1); if(date>=end) break; capLeft=capacity(date); }
+      while(capLeft<=0.01){ date=addDays(date,1); if(date>=end) break; capLeft=capPlan(date); }
       if(date>=end){ overflowMin+=rem; itemDays[it.id]=itemDays[it.id]||[]; itemDays[it.id].push({date:null,min:rem}); rem=0; break; }
       const a=Math.min(rem,capLeft);
       (dayPlan[date]=dayPlan[date]||[]).push({id:it.id,min:a,part:a<rem||(itemDays[it.id]&&itemDays[it.id].length)});
@@ -665,6 +753,7 @@ function recompute(){
   P.skipped={n:0,min:0};
   for(let d=s.startDate; d<s.examDate; d=addDays(d,1)) if(isSkipOverride(d)){ P.skipped.n++; P.skipped.min+=baseCapacity(d); }
   P.sl=computeSlip();
+  P.errReserve=0; for(let d=from; d<s.reviewStart; d=addDays(d,1)) P.errReserve+=capacity(d)-capPlan(d);
 }
  
 // ===================== UI =====================
@@ -677,7 +766,8 @@ function render(){
   recompute();
   renderTicker();
   const el=$('#view');
-  ({today:renderToday, week:renderWeek, calendar:renderCalendar, topics:renderTopics, qbank:renderQbank, log:renderLog, review:renderReview, settings:renderSettings}[view])(el);
+  ({today:renderToday, week:renderWeek, calendar:renderCalendar, topics:renderTopics, errors:renderErrors, qbank:renderQbank, log:renderLog, review:renderReview, settings:renderSettings}[view])(el);
+  const nb=$('#nav-err'); if(nb){ const n=errDueList(todayIso()).length; nb.textContent=n?String(n):''; }
   swTick();
   $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
   save();
@@ -737,6 +827,7 @@ function itemRowHtml(it, planMin, opts={}){
       <input class="mini mono" type="number" min="1" placeholder="soru" data-qc="${it.id}">
       <input class="mini mono" type="number" min="1" placeholder="dk" data-qm="${it.id}">
       <button class="btn sm" data-act="qlog" data-id="${it.id}">Kaydet</button>
+      <button class="ghost" data-act="err-new" data-topic="${it.topic}" data-lm="${it.lm}" data-src="${it.src}" title="Bu LM'den yanlış yaptığın bir soruyu kaydet">+ hata</button>
     </div>
   </div>`;
 }
@@ -788,7 +879,7 @@ function renderToday(el){
   else if(kind==='rest') head=`<div class="note">Bugün dinlenme günü. Çalışırsan aşağıdaki <b>Sırada</b> listesinden kaydet; plana sayılmaz, sapmaya artı yazar.</div>`;
   else if(kind==='blackout') head=`<div class="note">Bugün blackout günü olarak işaretli. Çalışabilirsen <b>Sırada</b> listesinden kaydet.</div>`;
   else if(kind==='skip') head=`<div class="note">Bugünü atladın (0 saat). <button class="btn sm" data-act="ovr-clear" data-date="${t}">Geri al</button></div>`;
-  else head=`<div class="note quiet">Kapasite ${fmtHM(cap)}${kind==='extra'?' (ek gün)':''}. Çalışamayacaksan: <button class="btn sm" data-act="skip-today">Bugünü atla</button></div>`;
+  else head=`<div class="note quiet">Kapasite ${fmtHM(cap)}${kind==='extra'?' (ek gün)':''}${S.settings.errBudget>0&&t<s.reviewStart&&S.errors.length?`, ${S.settings.errBudget} dk'sı hata tekrarına ayrıldı`:''}. Çalışamayacaksan: <button class="btn sm" data-act="skip-today">Bugünü atla</button></div>`;
  
   const showDate = t<s.startDate ? s.startDate : t;
   const list=(t<s.startDate ? (P.dayPlan[s.startDate]||[]) : plan);
@@ -817,6 +908,8 @@ function renderToday(el){
       <h1>${fmtDate(showDate,true)}</h1>
       ${head}
       ${swHtml()}
+      ${backupNoteHtml()}
+      ${errTodayHtml()}
       ${inReview?`<div class="note amber">Review fazı. ${mockToday?`<b>Bugün ${esc(mockToday.name)}</b> günü.`:''} Bugünün review hedefi Review sekmesinde.</div>`:''}
       <div class="rows">${rows}</div>
       ${nextHtml}
@@ -1146,9 +1239,10 @@ function renderSettings(el){
     <div class="form">
       <label>Video çarpanı <input type="number" class="mono" step="0.05" min="1" data-s="videoFactor" value="${s.videoFactor}"><span class="dim">izleme × (durdurma, not)</span></label>
       <label>Soru başına dk <input type="number" class="mono" step="0.25" min="0.5" data-s="minPerQ" value="${s.minPerQ}"><span class="dim">çözüm + çözümü okuma</span></label>
+      <label>Hata tekrarı bütçesi (dk/gün) <input type="number" class="mono" step="5" min="0" data-s="errBudget" value="${s.errBudget}"><span class="dim">review fazına kadar her çalışma gününden öğrenme kuyruğuna düşülür</span></label>
       <label class="chip-l"><input type="checkbox" data-s="prereq" ${s.prereq?'checked':''}> Prereq videolarını dahil et (Econ 9:21 + FSA 7:50 video; prereq Q-Bank soruları MM Q-Bank sekmesine eklenir)</label>
     </div>
-    <div class="note quiet">Plan: video ${fmtH(P.items.filter(i=>i.type==='video').reduce((a,i)=>a+i.est,0))} · LES ${P.tot.lesT} soru ${fmtH(P.tot.lesT*s.minPerQ)} · toplam ${fmtH(P.tot.est)} / öğrenme kapasitesi ${fmtH(P.capLearn)} · kuyruk bitişi ${P.learningEnd?fmtDate(P.learningEnd):'—'}. MM Q-Bank (${P.qbTot.total} soru) plan dışı.</div>
+    <div class="note quiet">Plan: video ${fmtH(P.items.filter(i=>i.type==='video').reduce((a,i)=>a+i.est,0))} · LES ${P.tot.lesT} soru ${fmtH(P.tot.lesT*s.minPerQ)} · toplam ${fmtH(P.tot.est)} / öğrenme kapasitesi ${fmtH(P.capLearn)} · kuyruk bitişi ${P.learningEnd?fmtDate(P.learningEnd):'—'}${P.errReserve>0?` (bugünden itibaren ${fmtH(P.errReserve)} hata tekrarına ayrıldı)`:''}. MM Q-Bank (${P.qbTot.total} soru) plan dışı.</div>
     <h2>Konu sırası ve sınav ağırlığı</h2>
     <p class="hint">Ağırlık kutusu Konular sekmesinde ve zayıf-LM sıralamasında kullanılır. Sağdaki gri değer CFA Institute'un 2027 resmi aralığı.</p>
     <div class="olist">${order}</div>
@@ -1160,6 +1254,435 @@ function renderSettings(el){
    </section>
   </div>`;
 }
+ 
+// ===================== HATA TEKRARI (aralıklı tekrar) =====================
+// Kayıt S.errors[] içinde durur, JSON yedeğine dahildir. Soru metni saklanmaz: sadece referans (soru no + ilk kelimeler).
+const ERR_TYPES={
+  kavram:{l:'Kavramı bilmiyordum / karıştırdım',fast:false},
+  formul:{l:'Formülü ya da kuralı hatırlamadım',fast:false},
+  okuma:{l:'Soruyu yanlış okudum / tuzağa düştüm',fast:false},
+  tahmin:{l:'Tahminle doğru buldum',fast:false},
+  hesap:{l:'Hesap ya da hesap makinesi hatası',fast:true},
+  dikkat:{l:'Dikkatsizlik',fast:true},
+  zaman:{l:'Doğru ama çok yavaş',fast:true},
+};
+const ERR_SRC={les:'LES',qb:'MM QB',mock:'Mock',other:'Diğer'};
+const ERR_INT={full:[2,7,21,45], fast:[7,21], rvFull:[1,3,7], rvFast:[3,7]};
+const ERR_RES={ok:['up','Doğru'],no:['down','Yanlış'],gs:['amber','Tahminle doğru']};
+const LASTEXP_KEY='cfa-l1-last-export';
+let errRun=null;                 // {id,start}: çalışan tekrar sayacı
+let errDraft=null, errEditId=null;
+let errF={st:'active',topic:'',q:''};
+let errImpOpen=false, errOverOpen=false, errBoxOpen=true, errRulesOpen=false, errRulesRY=null;
+let errOrd={date:null,ids:[]};   // bugünkü kart sırası (cevaplanan kart yerinde kalsın)
+const trNorm=s=>String(s||'').toLocaleLowerCase('tr').replace(/ı/g,'i').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ 
+function errRv(date){ return date>=S.settings.reviewStart; }
+function errInts(e,date){ const rv=errRv(date)||e.src==='mock'; return e.fast?(rv?ERR_INT.rvFast:ERR_INT.fast):(rv?ERR_INT.rvFull:ERR_INT.full); }
+// 'from' + gün; sınava kalan sürenin 1/3'ünden uzun aralık verilmez, kapasitesi 0 olan güne (dinlenme/blackout/atlanan) denk gelirse ileri kayar
+function errSchedule(from,days){
+  const s=S.settings, left=diffDays(from,s.examDate);
+  const n=left>0 ? Math.min(days,Math.max(1,Math.floor(left/3))) : days;
+  let d=addDays(from,n), g=0;
+  while(g++<40 && d<s.examDate && capacity(d)<=0) d=addDays(d,1);
+  return d;
+}
+function errColor(e){
+  const h=e.hist||[], last=h[h.length-1];
+  if(e.unclear) return 'r';
+  if(last && last.r==='no') return 'r';
+  const wr=h.filter(x=>x.r==='no').length, gs=h.filter(x=>x.r==='gs').length;
+  if(wr>=2) return 'r';
+  if(e.done) return (wr||gs)?'y':'g';
+  return e.stage>=1?'y':'r';
+}
+// tamamlanmış sarı/kırmızı kayıtlar review fazında bir kez daha gelir
+function errDue(e){
+  if(!e.done) return e.due||null;
+  const rs=S.settings.reviewStart;
+  if(errRv(todayIso()) && errColor(e)!=='g' && !(e.hist||[]).some(h=>h.d>=rs)) return rs;
+  return null;
+}
+function errDueList(date){
+  const rank={r:0,y:1,g:2}, rv=errRv(date);
+  return S.errors.filter(e=>{ const d=errDue(e); return d && d<=date; })
+    .sort((a,b)=>(rv?rank[errColor(a)]-rank[errColor(b)]:0) || (errDue(a)<errDue(b)?-1:errDue(a)>errDue(b)?1:0) || (a.ts||0)-(b.ts||0));
+}
+function errNew(d){
+  const t=todayIso(), created=d.created||logDate();
+  const e={id:uid(), created, topic:d.topic, lm:Number(d.lm)||0, src:d.src||'les', qno:d.qno||'', first:d.first||'', tag:d.tag||'',
+    type:ERR_TYPES[d.type]?d.type:'kavram', mistake:d.mistake||'', rule:d.rule||'', detail:d.detail||'', unclear:!!d.unclear,
+    stage:0, done:false, hist:[], ts:Date.now()};
+  e.fast=!!ERR_TYPES[e.type].fast;
+  e.due=errSchedule(created, errInts(e,created)[0]); if(e.due<t) e.due=t;
+  return e;
+}
+function errSamples(){ const xs=[]; for(const e of S.errors) for(const h of (e.hist||[])) if(h.sec) xs.push([h.d,h.sec]); xs.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0); return xs.slice(-30).map(x=>x[1]); }
+function errMinPerCard(){ const xs=errSamples(); if(xs.length<8) return 3; return clamp(xs.reduce((a,b)=>a+b,0)/xs.length/60,1,8); }
+function errCardBudget(){ const b=Number(S.settings.errBudget)||0; return b>0 ? Math.max(1,Math.floor(b/errMinPerCard())) : Infinity; }
+function errLogTime(sec,date){ // tekrar süresi Kayıtlar'a "Hata tekrarı" serbest çalışması olarak yazılır
+  let f=S.free.find(x=>x.err&&x.d===date);
+  if(!f){ if(sec<=0) return; f={id:uid(),d:date,m:0,note:'Hata tekrarı',err:true,sec:0,ts:Date.now()}; S.free.push(f); }
+  f.sec=Math.max(0,(Number(f.sec)||0)+sec); f.m=Math.round(f.sec/60);
+  if(f.sec<=0) S.free=S.free.filter(x=>x!==f);
+}
+function errReview(id,r){
+  const e=S.errors.find(x=>x.id===id); if(!e) return;
+  const t=logDate();
+  let sec=null; if(errRun&&errRun.id===id){ sec=Math.round((Date.now()-errRun.start)/1000); if(sec>900) sec=null; }
+  errRun=null;
+  const h={d:t,r,prev:{stage:e.stage,due:e.due,done:e.done,fast:e.fast}}; if(sec!==null) h.sec=sec;
+  const ints=errInts(e,t);
+  if(r==='ok'){
+    if(!e.done){ e.stage++; if(e.stage>=ints.length){ e.done=true; e.due=null; } else e.due=errSchedule(t,ints[e.stage]); }
+  } else if(r==='gs'){
+    if(e.done){ e.done=false; e.stage=ints.length-1; }
+    e.due=errSchedule(t, errRv(t)?1:2);
+  } else {
+    e.done=false; e.stage=0; e.fast=false; e.due=errSchedule(t, errInts(e,t)[0]);
+  }
+  h.logSec = sec!==null ? sec : Math.round(errMinPerCard()*60);
+  (e.hist=e.hist||[]).push(h);
+  errLogTime(h.logSec, t);
+}
+function errUndo(id){
+  const e=S.errors.find(x=>x.id===id); if(!e||!e.hist||!e.hist.length) return;
+  const h=e.hist.pop(); if(h.prev) Object.assign(e,h.prev);
+  errLogTime(-(h.logSec||0), h.d);
+}
+ 
+// ---------- ortak parçalar ----------
+function errLmTag(e){ return e.lm?`${e.topic} LM${e.lm}`:e.topic; }
+function errRefHtml(e){ const t=TOPIC_BY[e.topic]; return `<b style="color:${t?t.color:'#888'}">${errLmTag(e)}</b> · ${ERR_SRC[e.src]||esc(e.src)}${e.qno?' #'+esc(e.qno):''}${e.first?` · “${esc(e.first)}”`:''}`; }
+function errDotsHtml(e){ const n=errInts(e,todayIso()).length, f=e.done?n:Math.min(e.stage,n); return `<span class="dots" title="aşama ${f}/${n}${e.fast?' · hızlı şerit':''}">${[...Array(n)].map((_,i)=>`<i class="${i<f?'f':''}"></i>`).join('')}</span>`; }
+function errDueTxt(e){
+  const d=errDue(e); if(!d) return e.done?'<span class="up">tamamlandı</span>':'—';
+  const k=diffDays(todayIso(),d);
+  if(k<0) return `<span class="down">${-k} gün gecikti</span>`;
+  if(k===0) return '<span class="amber">bugün</span>';
+  return fmtDate(d);
+}
+function errHistHtml(e){
+  const out=[`${fmtDate(e.created)} kayıt`];
+  for(const h of (e.hist||[])) out.push(`${fmtDate(h.d)} <span class="${ERR_RES[h.r][0]}">${ERR_RES[h.r][1].toLowerCase()}</span>${h.sec?' '+fmtClock(h.sec)+(h.sec>180?' yavaş':''):''}`);
+  return `<div class="ehist">${out.map(x=>`<span>${x}</span>`).join('')}</div>`;
+}
+function errNoteHtml(e){
+  const extra=(e.hist||[]).filter(h=>h.note).map(h=>`<div class="k">Hatam · ${fmtDate(h.d)} tekrarında</div><p>${esc(h.note)}</p>`).join('');
+  return `<div class="enote"><div class="k">Hatam · ${fmtDate(e.created)} · ${esc((ERR_TYPES[e.type]||{}).l||e.type)}</div><p>${e.mistake?esc(e.mistake):'<span class="dim">—</span>'}</p>${extra}
+    <div class="k">Kural</div><p>${e.rule?esc(e.rule):'<span class="amber">Henüz yazılmadı (anlamadım işaretli)</span>'}</p>
+    ${e.detail?`<div class="k">Detay</div><p>${esc(e.detail)}</p>`:''}</div>${errHistHtml(e)}`;
+}
+ 
+// ---------- Bugün ekranındaki kartlar ----------
+function errCardHtml(e){
+  const t=todayIso(), c=errColor(e), last=(e.hist||[]).slice(-1)[0], doneToday=last&&last.d===t;
+  const head=`<div class="ec-h"><span class="ec-t">${esc(e.tag)}${e.unclear?' <span class="badge warn">anlamadım</span>':''}</span><span class="ec-m">${doneToday?'':errDueTxt(e)} ${errDotsHtml(e)}</span></div><div class="ec-ref">${errRefHtml(e)}</div>`;
+  if(!doneToday){
+    const run=errRun&&errRun.id===e.id;
+    const act = run
+      ? `<span class="ec-tm" id="err-tm">${fmtClock(Math.round((Date.now()-errRun.start)/1000))}</span><button class="btn sm ok" data-act="err-r" data-r="ok" data-id="${e.id}">Doğru</button><button class="btn sm no" data-act="err-r" data-r="no" data-id="${e.id}">Yanlış</button><button class="btn sm gs" data-act="err-r" data-r="gs" data-id="${e.id}">Tahminle doğru</button><button class="ghost" data-act="err-stop" title="Sayacı durdur">vazgeç</button>`
+      : `<button class="btn sm" data-act="err-start" data-id="${e.id}">Başla</button><span class="dim" style="font-size:12.5px">Soruyu LES'te aç, sonra başlat. Notun çözdükten sonra açılır.</span>`;
+    return `<div class="ecard c-${c}">${head}<div class="ec-act">${act}</div></div>`;
+  }
+  const [cls,lbl]=ERR_RES[last.r];
+  const nxt=e.done?'döngü tamamlandı':`sonraki tekrar ${fmtDate(errDue(e))}`;
+  const ask=last.r==='no'&&!last.note&&!last.skip ? `<div class="ec-ask"><textarea rows="2" id="err-again-${e.id}" placeholder="Bu sefer ne oldu? Somut olarak yaz (istersen geç)"></textarea><div class="ec-act"><button class="btn sm" data-act="err-again" data-id="${e.id}">Hatamı kaydet</button><button class="ghost" data-act="err-again-skip" data-id="${e.id}">Geç</button></div></div>` : '';
+  return `<div class="ecard c-${c} is-done">${head}<div class="ec-res"><span class="${cls}">${lbl}</span> <span class="dim">· ${nxt}${last.sec?` · ${fmtClock(last.sec)}${last.sec>180?' (yavaş)':''}`:''}</span></div>${ask}${errNoteHtml(e)}
+    <div class="ec-act" style="margin-top:8px"><button class="ghost" data-act="err-edit" data-id="${e.id}">Notu düzenle</button><button class="ghost" data-act="err-undo" data-id="${e.id}" title="Yanlış butona bastıysan">Geri al</button></div></div>`;
+}
+function errTodayHtml(){
+  if(!S.errors.length) return '';
+  const t=todayIso();
+  if(errOrd.date!==t) errOrd={date:t,ids:[]};
+  const due=errDueList(t), revd=S.errors.filter(e=>(e.hist||[]).some(h=>h.d===t));
+  const all=new Set([...due,...revd].map(e=>e.id));
+  errOrd.ids=errOrd.ids.filter(id=>all.has(id));
+  for(const e of [...revd,...due]) if(!errOrd.ids.includes(e.id)) errOrd.ids.push(e.id);
+  if(!all.size){
+    const nd=S.errors.map(errDue).filter(d=>d&&d>t).sort()[0];
+    return `<div class="note quiet">Bugün bekleyen hata tekrarı yok.${nd?` Sonraki: ${fmtDate(nd)}, ${S.errors.filter(e=>errDue(e)===nd).length} kart.`:''}</div>`;
+  }
+  const byId={}; S.errors.forEach(e=>byId[e.id]=e);
+  const dueSet=new Set(due.map(e=>e.id)), revToday=revd.length;
+  const left=Math.max(0, errCardBudget()-revToday);
+  let pend=0; const main=[], over=[];
+  for(const id of errOrd.ids){ const e=byId[id]; if(!e) continue; if(!dueSet.has(id)){ main.push(e); continue; } if(pend<left){ main.push(e); pend++; } else over.push(e); }
+  const mpc=errMinPerCard(), bud=Number(S.settings.errBudget)||0;
+  const sum = due.length ? `${due.length} kart bekliyor · ~${Math.round(Math.min(due.length,left===Infinity?due.length:left)*mpc)} dk` : 'bugünkü tekrarlar bitti';
+  const budTxt = bud ? ` · bütçe ${bud} dk${revToday?`, ${revToday} kart çözüldü`:''}` : (revToday?` · ${revToday} kart çözüldü`:'');
+  const overHtml = over.length ? `<details class="nextbox" id="err-over" ${errOverOpen?'open':''}><summary>Bütçe dışı ${over.length} kart <span class="dim">· çözmezsen yarın en öne geçer</span></summary><div class="ecards">${over.map(errCardHtml).join('')}</div></details>` : '';
+  return `<details class="errbox" id="err-box" ${errBoxOpen?'open':''}><summary><b>Hata tekrarı</b><span class="dim">${sum}${budTxt}</span></summary>
+    ${main.length?`<div class="ecards">${main.map(errCardHtml).join('')}</div>`:`<div class="note quiet" style="margin:10px 0 0">Bugünün bütçesi doldu.</div>`}${overHtml}</details>`;
+}
+function backupAge(){ let v=0; try{ v=Number(localStorage.getItem(LASTEXP_KEY))||0; }catch(e){} return v ? Math.floor((Date.now()-v)/86400000) : null; }
+function markBackup(){ try{ localStorage.setItem(LASTEXP_KEY, String(Date.now())); }catch(e){} }
+function backupNoteHtml(){
+  if(!S.errors.length) return '';
+  const a=backupAge(); if(a!==null && a<7) return '';
+  return `<div class="note amber">${a===null?'Hata kayıtlarının henüz bir yedeği yok.':`Son JSON yedeğinin üzerinden ${a} gün geçti.`} Kayıtlar yalnızca bu tarayıcıda duruyor. <button class="btn sm" data-act="export">JSON yedeği indir</button></div>`;
+}
+ 
+// ---------- HATALAR sekmesi ----------
+function errLmOpts(topic,sel){ const t=TOPIC_BY[topic]; if(!t) return ''; return t.lms.map(l=>`<option value="${l[0]}" ${String(l[0])===String(sel)?'selected':''}>LM${l[0]} · ${esc(l[1])}</option>`).join(''); }
+function errDraftDefault(){
+  const s=S.settings; let topic=s.order[0], lm='1';
+  const lastE=S.errors.slice().sort((a,b)=>(b.ts||0)-(a.ts||0))[0];
+  if(lastE){ topic=lastE.topic; lm=String(lastE.lm); } else { const cur=currentLmKey(); if(cur){ const p=cur.split('-'); topic=p[0]; lm=p[1]; } }
+  return {topic, lm, src:'les', qno:'', first:'', tag:'', type:'kavram', mistake:'', rule:'', detail:'', unclear:false};
+}
+function errSaveLabel(){
+  if(errEditId) return 'Değişiklikleri kaydet';
+  const d=errDraft, t=logDate(); const ints=errInts({fast:!!(ERR_TYPES[d.type]||{}).fast, src:d.src}, t);
+  return `Kaydet · ilk tekrar ${fmtDate(errSchedule(t,ints[0]))}`;
+}
+function errFormHtml(){
+  if(!errDraft) errDraft=errDraftDefault();
+  const d=errDraft, ed=!!errEditId, opt=(v,l,sel)=>`<option value="${v}" ${v===sel?'selected':''}>${l}</option>`;
+  return `<div class="eform ${ed?'editing':''}" id="eform">
+    <div class="ec-h" style="margin-bottom:10px"><span class="ec-t">${ed?'Kaydı düzenle':'Yeni hata'}</span><span class="mono dim" style="font-size:12px">${ed?'':fmtDate(logDate(),true)}</span></div>
+    <div class="ef-g">
+      <label>Konu<select data-ef="topic">${S.settings.order.map(c=>opt(c,`${c} · ${esc(TOPIC_BY[c].short)}`,d.topic)).join('')}</select></label>
+      <label>LM<select data-ef="lm" id="ef-lm">${errLmOpts(d.topic,d.lm)}</select></label>
+      <label>Kaynak<select data-ef="src">${Object.entries(ERR_SRC).map(([k,l])=>opt(k,l,d.src)).join('')}</select></label>
+      <label>Soru no<input data-ef="qno" class="mono" value="${esc(d.qno)}" placeholder="14"></label>
+      <label class="full">Sorunun ilk kelimeleri <i>numara kayarsa soruyu bununla bulursun</i><input data-ef="first" value="${esc(d.first)}" placeholder="An analyst estimates a 40%…"></label>
+      <label class="full">Etiket <i>tekrardan önce görünen tek bilgi, cevabı ele vermesin: "Annuity değerleme", "Annuity due BGN" değil</i><input data-ef="tag" value="${esc(d.tag)}" placeholder="Bayes, koşullu olasılık"></label>
+      <label class="full">Hata tipi<select data-ef="type">${Object.entries(ERR_TYPES).map(([k,v])=>opt(k,v.l+(v.fast?' · hızlı şerit':''),d.type)).join('')}</select></label>
+      <label class="full">Hatam <i>somut olarak ne yaptın; "dikkatsizlik" değil, neyi yanlış yaptığın</i><textarea data-ef="mistake" rows="2" placeholder="Paydaya sadece “beat” dalının olasılığını koydum">${esc(d.mistake)}</textarea></label>
+      <label class="full">Kural <i>“şunu görürsem → şunu yaparım”, 1-2 satır</i><textarea data-ef="rule" rows="2" placeholder="“Gözlendi / verildi” görürsem → önce ağaç çiz, payda = kanıtı üreten tüm yolların toplamı">${esc(d.rule)}</textarea></label>
+      <label class="full">Detay <i>opsiyonel: sınır durumları, uzun açıklama</i><textarea data-ef="detail" rows="2">${esc(d.detail)}</textarea></label>
+    </div>
+    <div class="ef-f"><label class="chip"><input type="checkbox" data-ef="unclear" ${d.unclear?'checked':''}> Anlamadım, kuralı sonra yazacağım</label><span class="ef-msg" id="ef-msg"></span>
+      <span class="ef-btns">${ed?'<button class="btn" data-act="err-cancel">Vazgeç</button>':''}<button class="btn" data-act="err-save" id="ef-save">${errSaveLabel()}</button></span></div>
+  </div>`;
+}
+function errListHtml(){
+  const t=todayIso(); let xs=S.errors.slice();
+  if(errF.st==='active') xs=xs.filter(e=>!e.done);
+  else if(errF.st==='due') xs=xs.filter(e=>{ const d=errDue(e); return d&&d<=t; });
+  else if(errF.st==='unclear') xs=xs.filter(e=>e.unclear);
+  else if(errF.st==='done') xs=xs.filter(e=>e.done);
+  if(errF.topic) xs=xs.filter(e=>e.topic===errF.topic);
+  const q=trNorm(errF.q.trim());
+  if(q) xs=xs.filter(e=>trNorm([e.tag,e.first,e.mistake,e.rule,e.detail,e.qno,errLmTag(e),...(e.hist||[]).map(h=>h.note||'')].join(' ')).includes(q));
+  const k=e=>errDue(e)||'9999';
+  xs.sort((a,b)=>k(a)<k(b)?-1:k(a)>k(b)?1:(b.ts||0)-(a.ts||0));
+  if(!xs.length) return `<div class="empty quiet">${S.errors.length?'Bu filtreye uyan kayıt yok.':'Henüz hata kaydı yok. Yukarıdaki formdan ilkini ekle.'}</div>`;
+  return `<div class="elist">${xs.map(e=>`<details class="erow c-${errColor(e)}"><summary><span class="er-t"><b>${esc(e.tag)}</b>${e.unclear?' <span class="badge warn">anlamadım</span>':''}<div class="er-s">${errRefHtml(e)}</div></span>${errDotsHtml(e)}<span class="er-d">${errDueTxt(e)}</span></summary>
+    <div class="er-b">${errNoteHtml(e)}<div class="ec-act" style="margin-top:8px"><button class="btn sm" data-act="err-edit" data-id="${e.id}">Düzenle</button><button class="btn sm danger" data-act="err-del" data-id="${e.id}">Sil</button></div></div></details>`).join('')}</div>`;
+}
+function errLoadHtml(){
+  const t=todayIso(), N=14, cnt=Array(N).fill(0);
+  for(const e of S.errors){ const d=errDue(e); if(!d) continue; const i=Math.max(0,diffDays(t,d)); if(i<N) cnt[i]++; }
+  const cap=errCardBudget(), capN=cap===Infinity?0:cap, mx=Math.max(1,capN,...cnt);
+  const bars=cnt.map((c,i)=>{ const d=addDays(t,i); return `<div class="lb ${capN&&c>capN?'over':''} ${i===0?'t':''}" style="height:${(c/mx*100).toFixed(1)}%" title="${fmtDateShort(d)}: ${c} kart${i===0?' (gecikenler dahil)':''}"><span>${c||''}</span></div>`; }).join('');
+  const xl=cnt.map((_,i)=>`<span>${parseD(addDays(t,i)).getDate()}</span>`).join('');
+  return `<div class="curve"><div class="curve-h"><span>Önümüzdeki 14 gün tekrar yükü</span><span>${capN?`kesikli çizgi = bütçe, ${capN} kart`:'bütçe sınırı yok'}</span></div>
+    <div class="load">${bars}${capN?`<div class="load-cap" style="bottom:${(capN/mx*70).toFixed(1)}px"></div>`:''}</div><div class="load-x">${xl}</div></div>`;
+}
+function errRulesHtml(){
+  const rv=errRv(todayIso()); const ry=errRulesRY===null?rv:errRulesRY;
+  let xs=S.errors.filter(e=>e.rule); if(ry) xs=xs.filter(e=>errColor(e)!=='g');
+  let body='';
+  for(const code of S.settings.order){
+    const tx=xs.filter(e=>e.topic===code); if(!tx.length) continue;
+    body+=`<div class="rs-t" style="color:${topicColor(code)}">${esc(TOPIC_BY[code].name)}</div>`;
+    const lms=[...new Set(tx.map(e=>e.lm))].sort((a,b)=>a-b);
+    for(const lm of lms){ const lmName=(TOPIC_BY[code].lms.find(l=>l[0]===lm)||[0,''])[1];
+      body+=`<div class="rs-lm">LM${lm} ${esc(lmName)}</div>`+tx.filter(e=>e.lm===lm).map(e=>`<div class="rs-i"><span class="cdot c-${errColor(e)}"></span><span><b>${esc(e.tag)}</b>${esc(e.rule)}</span></div>`).join(''); }
+  }
+  return `<details class="nextbox rsheet" id="rulesheet" ${errRulesOpen?'open':''}><summary>Kural sayfası <span class="dim">· kendi yazdığın kurallar, konu ve LM sırasıyla; son hafta için</span></summary>
+    <div class="chips" style="margin:8px 0 4px"><label class="chip"><input type="checkbox" id="rs-ry" ${ry?'checked':''}> Sadece kırmızı ve sarı</label><button class="btn sm" data-act="rs-print">Yazdır / PDF</button></div>
+    ${body||'<div class="empty quiet">Henüz kural yok.</div>'}</details>`;
+}
+function errHowHtml(){
+  return `<details class="nextbox"><summary>Sistem nasıl çalışır</summary><div class="howto-b">
+  <p><b>Kayıt.</b> Yanlış yaptığın ya da tahminle doğru bulduğun her soru için bir kayıt aç. Soru metni kopyalanmaz: soru numarası ve ilk birkaç kelime soruyu LES'te bulmana yeter. Açıklamayı okuyup anladıktan sonra "Hatam" ve "Kural" alanlarını kendi cümlelerinle yaz. Yazamıyorsan henüz anlamamışsın demektir; o zaman "Anlamadım"ı işaretle.</p>
+  <p><b>Aşamalar.</b> Normal döngü 4 tekrardır: 2, 7, 21 ve 45 gün sonra. Hesap hatası, dikkatsizlik ve "doğru ama yavaş" hızlı şeritte başlar: 7 ve 21 gün. Hızlı şeritteki bir soruyu tekrarda yine yanlış yaparsan normal döngüye geçer, çünkü tekrarlayan dikkatsizlik çoğu zaman bir kavram sorunudur. Noktalar kaç aşamayı geçtiğini gösterir.</p>
+  <p><b>Tekrar.</b> Kartta sadece etiket ve soru referansı görünür. Soruyu LES'te aç, Başla'ya bas, çöz ve sonucu işaretle. Notun ancak ondan sonra açılır. Doğru: bir sonraki aşama. Tahminle doğru: aşama değişmez, 2 gün sonra yine gelir; nedenini tek cümleyle açıklayamıyorsan bunu seç. Yanlış: döngü baştan başlar ve site bu sefer ne olduğunu sorar. Yanlış butona bastıysan Geri al ile düzeltirsin.</p>
+  <p><b>Takvim.</b> Tekrar günü dinlenme, blackout ya da atladığın bir güne denk gelirse ilk çalışma gününe kayar. Sınava kalan sürenin üçte birinden uzun aralık verilmez, yani 45 günlük aralık sınava yaklaştıkça kendiliğinden kısalır.</p>
+  <p><b>Bütçe ve gecikme.</b> Bugün ekranında bütçeye sığan kadar kart görünür (bütçe ÷ kart başına süre). Kart başına süre ilk 8 tekrarda 3 dk sayılır, sonra kendi ortalamandan hesaplanır. Bütçeye sığmayanlar ayrı listede durur; çözmezsen ertesi gün en öne geçer. Bütçe, öğrenme kuyruğundan her çalışma günü düşülür, bu yüzden plan ve bitiş tarihi tekrar süresini de hesaba katar. Tekrar süresi Kayıtlar'a "Hata tekrarı" adıyla otomatik yazılır.</p>
+  <p><b>27 Ocak sonrası.</b> Review fazında aralıklar 1, 3 ve 7 güne iner (mock hataları baştan beri bu aralıkları kullanır). Renkler hep görünür, öncelik ise bu fazda devreye girer: kırmızı (anlamadım, son tekrarı yanlış ya da en az iki kez yanlış) önce gelir, sarı (geçmişinde yanlış ya da tahmin olan) sonra; tamamlanmış sarılar bir kez daha karşına çıkar. Yeşiller (hiç takılmadan tamamlanan) sadece kural sayfasında kalır.</p>
+  <p><b>Yedek.</b> Kayıtlar yalnızca bu tarayıcıda durur ve JSON yedeğine dahildir. Son yedeğin üzerinden 7 gün geçince Bugün ekranı hatırlatır. Excel'e aktar, okunabilir bir CSV kopyası verir.</p>
+  </div></details>`;
+}
+function renderErrors(el){
+  const t=todayIso(), s=S.settings, due=errDueList(t);
+  const act=S.errors.filter(e=>!e.done).length, done=S.errors.length-act, unc=S.errors.filter(e=>e.unclear);
+  const mpc=errMinPerCard(), nS=errSamples().length, cap=errCardBudget();
+  const fb=(k,l,n)=>`<button class="btn sm ${errF.st===k?'on':''}" data-act="errf" data-f="${k}">${l} <span class="dim">${n}</span></button>`;
+  const st=(k,v,sub,cls='')=>`<div class="stat"><div class="k">${k}</div><div class="v mono ${cls}">${v}</div>${sub?`<div class="k">${sub}</div>`:''}</div>`;
+  const byLm={}; for(const e of S.errors){ const k=`${e.topic}-${e.lm}`; (byLm[k]=byLm[k]||{topic:e.topic,lm:e.lm,n:0,open:0}).n++; if(!e.done) byLm[k].open++; }
+  const lmRows=Object.values(byLm).sort((a,b)=>b.n-a.n).slice(0,10).map(x=>{ const nm=(TOPIC_BY[x.topic].lms.find(l=>l[0]===x.lm)||[0,''])[1]; return `<div class="wk-i"><b style="color:${topicColor(x.topic)}">${x.topic} LM${x.lm}</b> <span class="lmn">${esc(nm)}</span><span class="mono">${x.n} <span class="dim">· ${x.open} döngüde</span></span></div>`; }).join('');
+  const byType={}; for(const e of S.errors) byType[e.type]=(byType[e.type]||0)+1;
+  const typeRows=Object.entries(byType).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<div class="wk-i">${esc((ERR_TYPES[k]||{}).l||k)}<span class="mono">${n}</span></div>`).join('');
+  const ba=backupAge();
+  el.innerHTML=`<div class="bar"><h1>Hatalar</h1><span class="dim">Yanlış ve tahminle doğru soruların aralıklı tekrarı</span></div>
+  <div class="grid2">
+    <section class="col">
+      ${errFormHtml()}
+      <div class="efilter"><span class="chips" style="margin:0">${fb('active','Döngüde',act)}${fb('due','Bugün',due.length)}${fb('unclear','Anlamadım',unc.length)}${fb('done','Tamamlanan',done)}${fb('all','Tümü',S.errors.length)}</span>
+        <select id="errf-topic"><option value="">Tüm konular</option>${s.order.map(c=>`<option value="${c}" ${errF.topic===c?'selected':''}>${esc(TOPIC_BY[c].short)}</option>`).join('')}</select>
+        <input type="search" id="errf-q" class="wide" placeholder="Ara: etiket, kural, soru…" value="${esc(errF.q)}"></div>
+      <div id="err-list">${errListHtml()}</div>
+    </section>
+    <aside class="col">
+      <div class="stat-grid">
+        ${st('Bugün bekleyen', due.length, due.length?`~${Math.round(Math.min(due.length,cap)*mpc)} dk bütçe içinde`:'', due.length?'amber':'')}
+        ${st('Döngüde', act, '')}
+        ${st('Anlamadım', unc.length, '', unc.length?'down':'')}
+        ${st('Tamamlanan', done, '', done?'up':'')}
+      </div>
+      ${errLoadHtml()}
+      <div class="form">
+        <label>Günlük tekrar bütçesi (dk)<input type="number" class="mono" min="0" step="5" data-s="errBudget" value="${s.errBudget}"></label>
+        <label>Kart başına süre<span class="mono" style="color:var(--text);padding:5px 0">${fmtPct(mpc.toFixed(1))} dk <span class="dim">${nS<8?'· varsayılan':'· son '+nS+' tekrar'}</span></span></label>
+      </div>
+      <p class="hint">Bütçe her çalışma gününden öğrenme kuyruğu için düşülür (review fazı hariç). 0 yaparsan hiç düşülmez ve bekleyen bütün kartlar gösterilir.</p>
+      ${unc.length?`<h2>Anlamadıklarım</h2><div class="weak">${unc.map(e=>`<div class="wk-i"><b style="color:${topicColor(e.topic)}">${errLmTag(e)}</b> ${esc(e.tag)}<button class="ghost" data-act="err-edit" data-id="${e.id}" style="margin-left:auto">kural yaz</button></div>`).join('')}</div>`:''}
+      ${lmRows?`<h2>LM bazında</h2><div class="weak">${lmRows}</div>`:''}
+      ${typeRows?`<h2>Hata tipleri</h2><div class="weak">${typeRows}</div>`:''}
+      <h2>Excel ve yedek</h2>
+      <div class="chips"><button class="btn sm" data-act="err-csv" ${S.errors.length?'':'disabled'}>Excel'e aktar (CSV)</button><button class="btn sm ${errImpOpen?'on':''}" data-act="err-imp-open">Excel'den içe aktar</button><button class="btn sm" data-act="export">JSON yedeği indir</button></div>
+      <p class="hint">${ba===null?'Bu tarayıcıdan henüz yedek alınmadı.':`Son yedek ${ba===0?'bugün':ba+' gün önce'} alındı.`} JSON yedeği hata kayıtlarını da içerir.</p>
+      ${errImpOpen?`<div class="pastebox"><textarea id="err-imp-box" rows="6" placeholder="Excel'de başlık satırıyla birlikte satırları seç, kopyala ve buraya yapıştır"></textarea>
+        <div class="chips"><button class="btn sm" data-act="err-imp">İçe aktar</button><label class="btn sm">CSV dosyası seç<input type="file" accept=".csv,.tsv,.txt,text/csv" id="err-imp-file" hidden></label><button class="btn sm" data-act="err-imp-open">Kapat</button></div>
+        <p class="hint">İlk satır başlık olmalı. Tanınan sütunlar: Tarih, Konu, LM, LOS, Kaynak, Soru no, İlk kelimeler, Etiket, Hata tipi, Hatam, Kural, Detay, Anlamadım. İngilizce başlıklar da olur (Date, Topic, Source, Question Tag, Error Type, Correct Rule). Aynı soru zaten kayıtlıysa atlanır. Dosyayla yüklüyorsan Excel'de "CSV UTF-8" olarak kaydet, yoksa Türkçe karakterler bozulur.</p></div>`:''}
+    </aside>
+  </div>
+  ${errRulesHtml()}
+  ${errHowHtml()}`;
+}
+ 
+// ---------- CSV ----------
+function csvCell(v){ v=String(v===undefined||v===null?'':v); return /[;"\n\r\t]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+function errCsv(){
+  const H=['Tarih','Konu','LM','Kaynak','Soru no','İlk kelimeler','Etiket','Hata tipi','Hatam','Kural','Detay','Anlamadım','Durum','Aşama','Sonraki tekrar','Renk','Tekrar geçmişi'];
+  const t=todayIso();
+  const rows=S.errors.slice().sort((a,b)=>a.created<b.created?-1:a.created>b.created?1:0).map(e=>{ const n=errInts(e,t).length;
+    return [e.created,e.topic,e.lm,ERR_SRC[e.src]||e.src,e.qno,e.first,e.tag,(ERR_TYPES[e.type]||{}).l||e.type,e.mistake,e.rule,e.detail,e.unclear?'evet':'',e.done?'tamamlandı':'döngüde',e.done?`${n}/${n}`:`${Math.min(e.stage,n)}/${n}`,errDue(e)||'',{r:'kırmızı',y:'sarı',g:'yeşil'}[errColor(e)],
+      (e.hist||[]).map(h=>`${h.d} ${ERR_RES[h.r][1].toLowerCase()}${h.note?' ('+h.note+')':''}`).join(' | ')]; });
+  return '\ufeff'+[H,...rows].map(r=>r.map(csvCell).join(';')).join('\r\n');
+}
+function parseDelim(text){
+  text=String(text).replace(/^\ufeff/,'');
+  const first=text.split(/\r?\n/)[0]||'', cnt=ch=>first.split(ch).length-1;
+  const dl=[['\t',cnt('\t')],[';',cnt(';')],[',',cnt(',')]].sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=[]; let row=[], cell='', q=false;
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){ cell+='"'; i++; } else q=false; } else cell+=c; }
+    else if(c==='"'&&cell==='') q=true;
+    else if(c===dl){ row.push(cell); cell=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(cell); rows.push(row); row=[]; cell=''; }
+    else cell+=c; }
+  if(cell!==''||row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r=>r.some(x=>String(x).trim()!==''));
+}
+const ERR_COLS=[['tag',['etiket','tag']],['type',['hata tipi','error type','tip','type']],['mistake',['hatam','mistake','my error']],['rule',['kural','rule']],['detail',['detay','detail','aciklama','note','not']],['unclear',['anlamadim','unclear']],['first',['ilk kelime','first word','ilk']],['qno',['soru no','soru','question no','question #','q no','qno','#']],['date',['tarih','date']],['topic',['konu','topic']],['lm',['lm','module','modul']],['los',['los']],['src',['kaynak','source']]];
+function errMapHeader(h){ const n=trNorm(h).trim(); if(!n) return null; if(n==='no') return 'qno'; for(const [k,pats] of ERR_COLS) if(pats.some(p=>k==='lm'?(n===p||n.startsWith(p)):n.includes(p))) return k; return null; }
+function errParseDate(s){
+  s=String(s||'').trim(); if(!s) return null; let m;
+  if((m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return `${m[1]}-${pad(+m[2])}-${pad(+m[3])}`;
+  if((m=s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})/))){ const y=m[3].length===2?2000+Number(m[3]):Number(m[3]); const d=new Date(y,Number(m[2])-1,Number(m[1])); return isNaN(d)?null:iso(d); }
+  if(/^\d{5}(\.\d+)?$/.test(s)){ const d=new Date(1899,11,30+Math.floor(Number(s))); return isNaN(d)?null:iso(d); }
+  return null;
+}
+function errParseTopic(s){ const n=trNorm(s).trim(); if(!n) return null; const t=TOPICS.find(x=>trNorm(x.code)===n)||TOPICS.find(x=>{ const sh=trNorm(x.short).replace('.',''), nm=trNorm(x.name); return n.includes(sh)||nm.includes(n)||n.includes(nm); }); return t?t.code:null; }
+function errParseSrc(s){ const n=trNorm(s); if(!n) return 'les'; if(/mock/.test(n)) return 'mock'; if(/les|cfai|learning/.test(n)) return 'les'; if(/mm|qb|q-bank|bank|meldrum/.test(n)) return 'qb'; return 'other'; }
+function errParseType(s){ const n=trNorm(s); if(/dikkat|careless|sloppy/.test(n)) return 'dikkat'; if(/hesap|calc|arithmetic/.test(n)) return 'hesap'; if(/yavas|slow|zaman|time/.test(n)) return 'zaman'; if(/tahmin|guess|lucky|sans/.test(n)) return 'tahmin'; if(/formul|formula|forgot|hatirla/.test(n)) return 'formul'; if(/okuma|read|trap|tuzak/.test(n)) return 'okuma'; return 'kavram'; }
+function errImport(text){
+  const rows=parseDelim(text); if(rows.length<2) throw new Error('Başlık satırı ve en az bir veri satırı gerekli.');
+  const map=rows[0].map(errMapHeader), seen=new Set();
+  map.forEach((k,i)=>{ if(k&&seen.has(k)) map[i]=null; else if(k) seen.add(k); });
+  if(!seen.has('tag')&&!seen.has('rule')&&!seen.has('mistake')) throw new Error('Tanınan sütun yok. İlk satırın başlık olduğundan emin ol (Etiket, Hatam, Kural…).');
+  let add=0, skip=0;
+  for(const r of rows.slice(1)){
+    const o={}; map.forEach((k,i)=>{ if(k) o[k]=String(r[i]===undefined?'':r[i]).trim(); });
+    if(!o.tag&&!o.rule&&!o.mistake){ skip++; continue; }
+    const topic=errParseTopic(o.topic)||S.settings.order[0], lm=parseInt(String(o.lm||'').replace(/\D+/g,''),10)||0, src=errParseSrc(o.src);
+    const dup=S.errors.some(e=>e.topic===topic&&e.lm===lm&&((o.qno&&e.qno===o.qno&&e.src===src)||(o.tag&&e.tag===o.tag&&e.rule===(o.rule||''))));
+    if(dup){ skip++; continue; }
+    let detail=o.detail||''; if(o.los) detail=(detail?detail+'\n':'')+'LOS '+o.los;
+    S.errors.push(errNew({created:errParseDate(o.date)||todayIso(), topic, lm, src, qno:o.qno||'', first:o.first||'', tag:o.tag||(o.rule||o.mistake||'').slice(0,40),
+      type:errParseType(o.type), mistake:o.mistake||'', rule:o.rule||'', detail, unclear:/^(evet|yes|x|1|true|✓)$/i.test(o.unclear||'')}));
+    add++;
+  }
+  return {add,skip};
+}
+function errRunImport(text){ try{ const r=errImport(text); errImpOpen=false; render(); alert(`${r.add} kayıt eklendi${r.skip?`, ${r.skip} satır atlandı (boş ya da zaten kayıtlı)`:''}.`); }catch(err){ alert('İçe aktarılamadı: '+err.message); } }
+function errUpdateList(){ const l=$('#err-list'); if(l) l.innerHTML=errListHtml(); }
+function errFocus(sel){ setTimeout(()=>{ const x=$(sel); if(x){ x.focus(); } },0); }
+ 
+// hata kayıt olayları
+document.addEventListener('click', e=>{
+  const b=e.target.closest('[data-act]'); if(!b) return;
+  const a=b.dataset.act, id=b.dataset.id;
+  if(!/^(err|errf|rs-)/.test(a)) return;
+  if(a==='err-start'){ errRun={id,start:Date.now()}; render(); }
+  else if(a==='err-stop'){ errRun=null; render(); }
+  else if(a==='err-r'){ errReview(id,b.dataset.r); render(); }
+  else if(a==='err-undo'){ errUndo(id); render(); }
+  else if(a==='err-again'||a==='err-again-skip'){ const x=S.errors.find(q=>q.id===id); const h=x&&x.hist&&x.hist[x.hist.length-1]; if(!h) return; const v=a==='err-again'?(($('#err-again-'+id)||{}).value||'').trim():''; if(v) h.note=v; else h.skip=true; render(); }
+  else if(a==='err-new'){ errEditId=null; errDraft={...errDraftDefault(), topic:b.dataset.topic, lm:String(b.dataset.lm), src:b.dataset.src||'les'}; view='errors'; render(); errFocus('[data-ef="qno"]'); }
+  else if(a==='err-edit'){ const x=S.errors.find(q=>q.id===id); if(!x) return; errEditId=id; errDraft={topic:x.topic,lm:String(x.lm),src:x.src,qno:x.qno,first:x.first,tag:x.tag,type:x.type,mistake:x.mistake,rule:x.rule,detail:x.detail,unclear:!!x.unclear}; view='errors'; render(); setTimeout(()=>{ const f=$('#eform'); if(f) f.scrollIntoView({block:'start'}); },0); }
+  else if(a==='err-cancel'){ errEditId=null; errDraft=null; render(); }
+  else if(a==='err-del'){ const x=S.errors.find(q=>q.id===id); if(x&&confirm(`“${x.tag}” kaydı ve tekrar geçmişi silinsin mi?`)){ S.errors=S.errors.filter(q=>q.id!==id); if(errEditId===id){ errEditId=null; errDraft=null; } render(); } }
+  else if(a==='err-save'){
+    const d=errDraft, msg=$('#ef-msg'), need=[];
+    const tr=k=>String(d[k]||'').trim();
+    if(!tr('qno')&&!tr('first')) need.push('soru no ya da ilk kelimeler');
+    if(!tr('tag')) need.push('etiket');
+    if(!tr('mistake')) need.push('hatam');
+    if(!tr('rule')&&!d.unclear) need.push('kural (ya da "anlamadım")');
+    if(need.length){ if(msg) msg.textContent='Eksik: '+need.join(', '); return; }
+    const clean={topic:d.topic, lm:Number(d.lm)||0, src:d.src, qno:tr('qno'), first:tr('first'), tag:tr('tag'), type:d.type, mistake:tr('mistake'), rule:tr('rule'), detail:tr('detail'), unclear:!!d.unclear};
+    if(errEditId){
+      const x=S.errors.find(q=>q.id===errEditId);
+      if(x){ const typeChanged=x.type!==clean.type||x.src!==clean.src; Object.assign(x,clean);
+        if(typeChanged && !(x.hist||[]).length && !x.done){ x.fast=!!ERR_TYPES[x.type].fast; const t=todayIso(); x.due=errSchedule(x.created, errInts(x,x.created)[0]); if(x.due<t) x.due=t; } }
+      errEditId=null; errDraft=null; render(); return;
+    }
+    const dup=clean.qno && S.errors.find(q=>q.topic===clean.topic&&q.lm===clean.lm&&q.src===clean.src&&q.qno===clean.qno);
+    if(dup && !confirm(`${errLmTag(dup)} ${ERR_SRC[dup.src]} #${dup.qno} zaten kayıtlı (“${dup.tag}”). Yine de ayrı bir kayıt olarak eklensin mi?`)) return;
+    S.errors.push(errNew(clean));
+    errDraft={...errDraftDefault(), topic:clean.topic, lm:String(clean.lm), src:clean.src};
+    render(); errFocus('[data-ef="qno"]');
+  }
+  else if(a==='errf'){ errF.st=b.dataset.f; render(); }
+  else if(a==='err-csv'){ const blob=new Blob([errCsv()],{type:'text/csv;charset=utf-8'}); const u=URL.createObjectURL(blob); const l=document.createElement('a'); l.href=u; l.download=`cfa-hatalar-${todayIso()}.csv`; l.click(); URL.revokeObjectURL(u); }
+  else if(a==='err-imp-open'){ errImpOpen=!errImpOpen; render(); if(errImpOpen) errFocus('#err-imp-box'); }
+  else if(a==='err-imp'){ const v=($('#err-imp-box')||{}).value||''; if(!v.trim()) return; errRunImport(v); }
+  else if(a==='rs-print'){ document.body.classList.add('print-rules'); window.print(); }
+});
+window.addEventListener('afterprint', ()=>document.body.classList.remove('print-rules'));
+document.addEventListener('input', e=>{
+  const t=e.target;
+  if(t.dataset && t.dataset.ef!==undefined && errDraft){
+    const k=t.dataset.ef; errDraft[k]=t.type==='checkbox'?t.checked:t.value;
+    if(k==='topic'){ const lmSel=$('#ef-lm'); const first=TOPIC_BY[t.value].lms[0][0]; if(lmSel) lmSel.innerHTML=errLmOpts(t.value,first); errDraft.lm=String(first); }
+    if(k==='type'||k==='src'){ const sb=$('#ef-save'); if(sb) sb.textContent=errSaveLabel(); }
+    const m=$('#ef-msg'); if(m) m.textContent='';
+  }
+  else if(t.id==='errf-q'){ errF.q=t.value; errUpdateList(); }
+});
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.dataset && t.dataset.ef!==undefined && errDraft){ // select ve checkbox için input olayı yetmeyebilir
+    const k=t.dataset.ef, v=t.type==='checkbox'?t.checked:t.value; if(errDraft[k]===v) return; errDraft[k]=v;
+    if(k==='topic'){ const lmSel=$('#ef-lm'); const first=TOPIC_BY[v].lms[0][0]; if(lmSel) lmSel.innerHTML=errLmOpts(v,first); errDraft.lm=String(first); }
+    if(k==='type'||k==='src'){ const sb=$('#ef-save'); if(sb) sb.textContent=errSaveLabel(); }
+  }
+  else if(t.id==='errf-topic'){ errF.topic=t.value; errUpdateList(); }
+  else if(t.id==='rs-ry'){ errRulesRY=t.checked; render(); }
+  else if(t.id==='err-imp-file'){ const f=t.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>errRunImport(r.result); r.readAsText(f,'utf-8'); t.value=''; }
+});
+document.addEventListener('toggle', e=>{
+  const d=e.target; if(!d||!d.id) return;
+  if(d.id==='err-over') errOverOpen=d.open; else if(d.id==='err-box') errBoxOpen=d.open; else if(d.id==='rulesheet') errRulesOpen=d.open;
+}, true);
+setInterval(()=>{ if(!errRun) return; const el=$('#err-tm'); if(el) el.textContent=fmtClock(Math.round((Date.now()-errRun.start)/1000)); }, 1000);
+ 
  
 // ===================== KRONOMETRE =====================
 // Zaman damgası bazlı: sekme değişse, telefon kilitlense ya da sayfa yenilense de doğru sayar.
@@ -1209,7 +1732,7 @@ document.addEventListener('click', e=>{
   else if(a==='skip-today'){ S.overrides[todayIso()]=0; render(); }
   else if(a==='ovr-clear'){ delete S.overrides[b.dataset.date]; render(); }
   else if(a==='ew-reset'){ S.settings.examW={...DEFAULTS().settings.examW}; render(); }
-  else if(a==='copy'){ const txt=JSON.stringify(S); const ok=()=>{ b.textContent='Kopyalandı ✓'; setTimeout(()=>{ b.textContent='Panoya kopyala'; },1500); };
+  else if(a==='copy'){ const txt=JSON.stringify(S); markBackup(); const ok=()=>{ b.textContent='Kopyalandı ✓'; setTimeout(()=>{ b.textContent='Panoya kopyala'; },1500); };
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok).catch(()=>{ prompt('Kopyalanamadı — bu metni kendin kopyala:', txt); });
     else prompt('Bu metni kopyala:', txt); }
   else if(a==='paste'){ const open=()=>{ pasteOpen=true; render(); setTimeout(()=>{ const ta=$('#paste-box'); if(ta) ta.focus(); },0); };
@@ -1223,7 +1746,7 @@ document.addEventListener('click', e=>{
   else if(a==='bo-add'){ S.settings.blackouts.push({id:uid(),from:todayIso(),to:todayIso(),label:''}); render(); }
   else if(a==='bo-del'){ S.settings.blackouts=S.settings.blackouts.filter(x=>x.id!==id); render(); }
   else if(a==='ord'){ const o=S.settings.order, i=o.indexOf(b.dataset.c), j=i+Number(b.dataset.n); if(j<0||j>=o.length) return; [o[i],o[j]]=[o[j],o[i]]; render(); }
-  else if(a==='export'){ const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}); const u=URL.createObjectURL(blob); const l=document.createElement('a'); l.href=u; l.download=`cfa-planner-${todayIso()}.json`; l.click(); URL.revokeObjectURL(u); }
+  else if(a==='export'){ const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}); const u=URL.createObjectURL(blob); const l=document.createElement('a'); l.href=u; l.download=`cfa-planner-${todayIso()}.json`; l.click(); URL.revokeObjectURL(u); markBackup(); render(); }
   else if(a==='reset'){ if(confirm('Tüm ilerleme ve ayarlar silinecek. Emin misin?')){ S=DEFAULTS(); render(); } }
 });
 document.addEventListener('change', e=>{
